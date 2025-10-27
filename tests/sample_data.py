@@ -194,4 +194,8 @@ def get_sample_type(sample_name: str) -> Literal["valid", "invalid"]:
         'invalid'
     """
     category = get_sample_category(sample_name)
-    return category.split("-")[0]
+    result = category.split("-")[0]
+    if result not in ("valid", "invalid"):
+        msg = f"Invalid sample type: {result}"
+        raise ValueError(msg)
+    return result  # type: ignore[return-value]
