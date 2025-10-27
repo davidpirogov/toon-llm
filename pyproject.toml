@@ -1,6 +1,6 @@
 [project]
 name = "toon-llm"
-version = "1.0.0-beta.2"
+version = "1.0.0-beta.3"
 description = "Token-Oriented Object Notation – Optimised serialization JSON for LLMs"
 readme = "README.md"
 license = { file = "LICENSE" }
@@ -51,10 +51,11 @@ Homepage = "https://github.com/davidpirogov/toon-llm"
 line-length = 110
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/toon"]
+only-include = ["src/toon"]
+sources = ["src"]
 
 [tool.hatch.build.targets.sdist]
-packages = ["src/toon"]
+only-include = ["src/toon"]
 
 [tool.pytest.ini_options]
 minversion = "8.0"
