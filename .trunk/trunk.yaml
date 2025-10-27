@@ -29,6 +29,12 @@ lint:
         - taplo@0.10.0
         - trufflehog@3.90.11
         - yamllint@1.37.1
+    ignore:
+        - linters: [bandit]
+          paths:
+              - "**/tests/**"
+              - "**/test_*.py"
+              - "**/*_test.py"
 actions:
     disabled:
         - trunk-announce

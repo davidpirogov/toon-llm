@@ -4,15 +4,18 @@ version = "v0.3.1"
 description = "Token-Oriented Object Notation – JSON for LLMs"
 readme = "README.md"
 license = { file = "LICENSE" }
+authors = [
+  { name = "David Pirogov", email = "580286+davidpirogov@users.noreply.github.com" },
+]
 requires-python = ">=3.11"
 dependencies = [
-    "better-exceptions>=0.3.3",
-    "coverage>=7.11.0",
-    "pydantic>=2.12.3",
-    "pyright>=1.1.407",
-    "pytest>=8.4.2",
-    "ruff>=0.14.2",
-    "tox>=4.32.0",
+  "better-exceptions>=0.3.3",
+  "coverage>=7.11.0",
+  "pydantic>=2.12.3",
+  "pyright>=1.1.407",
+  "pytest>=8.4.2",
+  "ruff>=0.14.2",
+  "tox>=4.32.0",
 ]
 
 [project.urls]
@@ -26,3 +29,60 @@ packages = ["pytoon"]
 
 [tool.hatch.build.targets.sdist]
 packages = ["pytoon"]
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+testpaths = ["tests"]
+python_files = ["test_*.py", "*_test.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = [
+  "-ra",
+  "--strict-markers",
+  "--strict-config",
+  "--cov=dpn_pyutils",
+  "--cov-branch",
+  "--cov-report=term-missing:skip-covered",
+  "--cov-report=html",
+  "--cov-report=xml",
+  "--cov-fail-under=50",
+  "--maxfail=1",
+  "--tb=short",
+]
+
+# Coverage configuration
+[tool.coverage.run]
+source = ["pytoon"]
+branch = true
+parallel = true
+omit = ["*/tests/*", "*/__init__.py", "*/.venv/*", "*/venv/*"]
+
+[tool.coverage.report]
+precision = 2
+show_missing = true
+skip_covered = false
+exclude_lines = [
+  "pragma: no cover",
+  "def __repr__",
+  "def __str__",
+  "raise AssertionError",
+  "raise NotImplementedError",
+  "if __name__ == .__main__.:",
+  "if TYPE_CHECKING:",
+  "if typing.TYPE_CHECKING:",
+  "@overload",
+  "@abstractmethod",
+  "@abc.abstractmethod",
+  "class .*\\(Protocol\\):",
+  "class .*\\(typing.Protocol\\):",
+]
+
+[tool.coverage.html]
+directory = "htmlcov"
+
+[tool.coverage.xml]
+output = "coverage.xml"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
