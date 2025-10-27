@@ -177,59 +177,6 @@ encode((1, 2, 3))
 # → '[3]: 1,2,3'
 ```
 
-## Implementation Status
-
-### Core Features ✅
-
-- [x] Primitive type encoding/decoding (str, int, float, bool, None)
-- [x] Dictionary encoding/decoding with automatic key quoting
-- [x] List encoding with automatic format selection:
-    - [x] Inline format (primitives)
-    - [x] Tabular format (uniform objects)
-    - [x] List format (mixed/nested)
-- [x] Nested structure support
-- [x] String quoting and escaping
-- [x] Delimiter customization (comma, tab, pipe)
-- [x] Length marker support
-- [x] Indentation control
-
-### Python-Specific Features ✅
-
-- [x] Datetime object support (ISO 8601)
-- [x] Dataclass support (automatic conversion)
-- [x] Pydantic model support (automatic conversion)
-- [x] Set support (converted to lists)
-- [x] Tuple support (treated as lists)
-- [x] Non-serializable value handling (→ None)
-- [x] Special number handling (-0, NaN, Infinity)
-
-### Configuration ✅
-
-- [x] EncodeOptions Pydantic model with validation
-- [x] DecodeOptions Pydantic model with validation
-- [x] Immutable/frozen options
-- [x] Delimiters enum for convenience
-
-### Testing ✅
-
-- [x] Comprehensive test suite (310 tests)
-- [x] 80.52% code coverage
-- [x] Encoding tests (primitives, objects, arrays)
-- [x] Decoding tests (all formats)
-- [x] Round-trip tests
-- [x] Edge case tests
-- [x] Format validation tests
-- [x] Python-specific feature tests
-
-### Documentation 🔄
-
-- [x] Complete API reference (IMPLEMENTATION.md)
-- [x] Usage examples and best practices
-- [x] Type system documentation
-- [x] Error handling guide
-- [ ] Root README (in progress)
-- [ ] CLI documentation (optional)
-
 ## Additional Resources
 
 ### For Users
@@ -243,11 +190,12 @@ encode((1, 2, 3))
 - **[CODING_STANDARDS.md](./CODING_STANDARDS.md)** - Development standards and best practices
 - **[../IMPLEMENTATION_PLAN.md](../IMPLEMENTATION_PLAN.md)** - Implementation roadmap
 - **[../CHECKLIST.md](../CHECKLIST.md)** - Development progress tracking
+- **[BUILD.md](./BUILD.md)** - Build and distribution instructions
 
 ## Support
 
-- **Issues**: [GitHub Issues](https://github.com/yourusername/py-toon/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/yourusername/py-toon/discussions)
+- **Issues**: [GitHub Issues](https://github.com/davidpirogov/py-toon/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/davidpirogov/py-toon/discussions)
 
 ## License
 
