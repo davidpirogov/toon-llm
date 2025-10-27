@@ -35,7 +35,12 @@ dependencies = [
   "pytest-cov>=6.0.0",
   "ruff>=0.14.2",
   "tox>=4.32.0",
+  "typer>=0.15.0",
 ]
+
+[project.scripts]
+pytoon = "pytoon.main:app"
+toon = "pytoon.main:app"
 
 [project.urls]
 Homepage = "https://github.com/davidpirogov/py-toon"

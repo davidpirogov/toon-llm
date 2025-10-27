@@ -2,8 +2,8 @@
 
 Token-Oriented Object Notation (TOON) is an LLM-optimized data serialization format implemented in Python.
 
-[![Tests](https://img.shields.io/badge/tests-310%20passing-success)](./tests/)
-[![Coverage](https://img.shields.io/badge/coverage-80.5%25-success)](./htmlcov/)
+![Tests](https://img.shields.io/badge/tests-365%20passing-success)
+![Coverage](https://img.shields.io/badge/coverage-83.46%25-success)
 [![Python](https://img.shields.io/badge/python-3.11+-blue)](https://www.python.org/)
 [![License](https://img.shields.io/badge/license-MIT-blue)](./LICENSE)
 
@@ -72,6 +72,38 @@ Process the following structured data and return the invoices that have not been
 
 # Call your LLM with llm_prompt...
 ````
+
+### CLI Usage
+
+PyToon includes a command-line interface for encoding and decoding data:
+
+```bash
+# Show help
+uv run toon --help
+
+# Encode JSON file to TOON format
+uv run toon encode input.json -o output.toon
+
+# Encode from stdin
+echo '{"name": "Alice", "age": 30}' | uv run toon encode
+
+# Decode TOON file to JSON
+uv run toon decode input.toon -o output.json
+
+# Decode with pretty printing
+uv run toon decode input.toon --pretty
+
+# Decode with validation
+uv run toon decode input.toon --validate
+
+# Custom formatting options
+uv run toon encode input.json --indent 4 --delimiter "|"
+
+# Show version
+uv run toon --version
+```
+
+See `uv run toon encode --help` and `uv run toon decode --help` for all available options.
 
 ## 📖 Documentation
 
