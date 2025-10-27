@@ -215,10 +215,10 @@ uv sync
 uv run pytest
 
 # Run linting
-uv run ruff check TOON LLM/
+uv run ruff check src/toon/
 
 # Format code
-uv run ruff format TOON LLM/
+uv run ruff format src/toon/
 ```
 
 ### Development Guidelines
