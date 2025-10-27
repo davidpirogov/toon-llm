@@ -20,8 +20,8 @@ from toon.errors import DecodeError, EncodeError
 
 # Create the main Typer app
 app = typer.Typer(
-    name="pytoon",
-    help="TOON LLM: Token-Oriented Object Notation for LLMs",
+    name="toon",
+    help="toon: Token-Oriented Object Notation for LLMs",
     add_completion=False,
 )
 
@@ -29,7 +29,7 @@ app = typer.Typer(
 def version_callback(value: bool) -> None:
     """Print version and exit."""
     if value:
-        typer.echo(f"pytoon {__version__}")
+        typer.echo(f"toon {__version__}")
         raise typer.Exit()
 
 
@@ -49,7 +49,7 @@ def main(
     """
     TOON LLM CLI: Encode JSON to TOON LLM format or decode TOON LLM to JSON.
 
-    Use 'pytoon encode' or 'pytoon decode' subcommands.
+    Use 'toon encode' or 'toon decode' subcommands.
     """
     pass
 
@@ -92,11 +92,11 @@ def encode_cmd(
     Encode JSON data to TOON format.
 
     Examples:
-        pytoon encode input.json -o output.toon
-        pytoon encode input.json
-        cat input.json | pytoon encode
-        pytoon encode - -o output.toon < input.json
-        pytoon encode input.json --indent 4 --delimiter "|"
+        toon encode input.json -o output.toon
+        toon encode input.json
+        cat input.json | toon encode
+        toon encode - -o output.toon < input.json
+        toon encode input.json --indent 4 --delimiter "|"
     """
     try:
         # Read input
@@ -193,12 +193,12 @@ def decode_cmd(
     Decode TOON format to JSON.
 
     Examples:
-        pytoon decode input.toon -o output.json
-        pytoon decode input.toon --pretty
-        cat input.toon | pytoon decode
-        pytoon decode - -o output.json < input.toon
-        pytoon decode input.toon --delimiter "|"
-        pytoon decode input.toon --validate
+        toon decode input.toon -o output.json
+        toon decode input.toon --pretty
+        cat input.toon | toon decode
+        toon decode - -o output.json < input.toon
+        toon decode input.toon --delimiter "|"
+        toon decode input.toon --validate
     """
     try:
         # Read input

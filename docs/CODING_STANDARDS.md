@@ -374,8 +374,8 @@ class EncodeOptions(BaseModel):
 
 **Required**: Organize modules by functionality:
 
-```
-pytoon/
+```text
+src/toon/
 ├── __init__.py          # Public API exports
 ├── types.py             # Type definitions and Pydantic models
 ├── constants.py         # Constants and enums

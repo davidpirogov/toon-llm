@@ -16,7 +16,7 @@ Packaging after changes need the following to be executed:
 
 ### Update the version number
 
-Bump the version number (the `__version__` variable in `pytoon/__init__.py` is automatically read from `pyproject.toml`):
+Bump the version number (the `__version__` variable in `src/toon/__init__.py` is automatically read from `pyproject.toml`):
 
 - The MAJOR and MINOR versions should **always** have an associated reviewed pull request
 - The PATCH version should be bumped for small changes, documentation updates, and minor fixes

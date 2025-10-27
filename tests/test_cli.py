@@ -31,19 +31,19 @@ class TestCLIVersion:
         """Test --version flag displays version."""
         result = runner.invoke(app, ["--version"])
         assert result.exit_code == 0
-        assert f"pytoon {__version__}" in result.stdout
+        assert f"toon {__version__}" in result.stdout
 
     def test_version_short_flag(self):
         """Test -v short flag displays version."""
         result = runner.invoke(app, ["-v"])
         assert result.exit_code == 0
-        assert f"pytoon {__version__}" in result.stdout
+        assert f"toon {__version__}" in result.stdout
 
     def test_help_flag(self):
         """Test --help flag displays help."""
         result = runner.invoke(app, ["--help"])
         assert result.exit_code == 0
-        assert "TOON LLM: Token-Oriented Object Notation for LLMs" in result.stdout
+        assert "toon: Token-Oriented Object Notation for LLMs" in result.stdout
         assert "encode" in result.stdout
         assert "decode" in result.stdout
 

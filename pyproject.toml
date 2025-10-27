@@ -41,7 +41,6 @@ dependencies = [
 ]
 
 [project.scripts]
-pytoon = "toon.main:app"
 toon = "toon.main:app"
 
 [project.urls]
