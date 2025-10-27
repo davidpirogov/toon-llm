@@ -7,10 +7,11 @@ license = { file = "LICENSE" }
 requires-python = ">=3.11"
 dependencies = [
     "better-exceptions>=0.3.3",
-    "bumpver>=2025.1131",
     "coverage>=7.11.0",
     "pydantic>=2.12.3",
+    "pyright>=1.1.407",
     "pytest>=8.4.2",
+    "ruff>=0.14.2",
     "tox>=4.32.0",
 ]
 
@@ -25,14 +26,3 @@ packages = ["pytoon"]
 
 [tool.hatch.build.targets.sdist]
 packages = ["pytoon"]
-
-[tool.bumpver]
-current_version = "3.12.4"
-version_pattern = "MAJOR.MINOR.PATCH"
-commit_message = "Bump version {old_version} -> {new_version}"
-commit = true
-tag = true
-push = false
-
-[tool.bumpver.file_patterns]
-"pyproject.toml" = ['current_version = "{version}"', 'version = "{version}"']
