@@ -1,0 +1,18 @@
+company:
+  name: ACME Corp
+  founded: 2020
+  employees[3]{id,name,role,active}:
+    1,Alice,engineer,true
+    2,Bob,manager,true
+    3,Charlie,designer,false
+  offices[2]:
+    - city: SF
+      country: US
+      staff[2]: 1,2
+    - city: London
+      country: UK
+      staff[1]: 3
+  metadata:
+    tags[4]: tech,saas,b2b,startup
+    investors[0]:
+    public: false

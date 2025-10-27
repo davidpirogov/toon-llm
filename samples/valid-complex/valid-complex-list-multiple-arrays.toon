@@ -1,0 +1,4 @@
+items[1]:
+  - nums[3]: 1,2,3
+    tags[2]: a,b
+    name: test

@@ -1,0 +1,3 @@
+items[2]{id,name,role}:
+  1,Alice,engineer
+  2,Bob

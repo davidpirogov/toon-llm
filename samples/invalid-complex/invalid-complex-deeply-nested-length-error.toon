@@ -1,0 +1,9 @@
+products[2]:
+  - id: p1
+    tags[3]: a,b,c
+    specs:
+      weight: 1.5
+  - id: p2
+    tags[2]: x,y,z
+    specs:
+      weight: 0.5

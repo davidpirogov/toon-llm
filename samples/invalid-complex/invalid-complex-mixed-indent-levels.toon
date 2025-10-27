@@ -1,0 +1,5 @@
+company:
+  name: ACME Corp
+  employees[2]{id,name}:
+    1,Alice
+  2,Bob

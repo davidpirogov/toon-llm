@@ -1,0 +1,9 @@
+company:
+  employees[3]{id,name,role}:
+    1,Alice,engineer
+    2,Bob,manager
+  offices[2]:
+    - city: SF
+      staff[2]: 1,2
+    city: London
+      staff[1]: 3

@@ -1,0 +1,3 @@
+items[2]{sku,desc,qty}:
+  "A,1",cool,2
+  B2,"wip: test",1

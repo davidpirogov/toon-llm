@@ -1,0 +1,6 @@
+user:
+  id: 123
+  name: Ada
+  tags[2]: reading,gaming
+  active: true
+  prefs[0]:

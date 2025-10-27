@@ -1,0 +1,19 @@
+products[3]:
+  - id: p1
+    name: Widget Pro
+    price: 29.99
+    tags[3]: hardware,tool,premium
+    specs:
+      weight: 1.5
+      dimensions[3]: 10,5,3
+  - id: p2
+    name: Basic Widget
+    price: 9.99
+    tags[2]: hardware,tool
+    specs:
+      weight: 0.5
+  - id: p3
+    name: Software Suite
+    price: 99.99
+    tags[2]: software,subscription
+    features[4]: analytics,reporting,api,support
