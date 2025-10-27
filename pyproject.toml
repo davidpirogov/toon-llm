@@ -1,0 +1,37 @@
+[project]
+name = "py-toon"
+version = "v0.3.1"
+description = "Token-Oriented Object Notation – JSON for LLMs"
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.11"
+dependencies = [
+    "better-exceptions>=0.3.3",
+    "bumpver>=2025.1131",
+    "coverage>=7.11.0",
+    "pytest>=8.4.2",
+    "tox>=4.32.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/davidpirogov/py-toon"
+
+[tool.black]
+line-length = 110
+
+[tool.hatch.build.targets.wheel]
+packages = ["pytoon"]
+
+[tool.hatch.build.targets.sdist]
+packages = ["pytoon"]
+
+[tool.bumpver]
+current_version = "3.12.4"
+version_pattern = "MAJOR.MINOR.PATCH"
+commit_message = "Bump version {old_version} -> {new_version}"
+commit = true
+tag = true
+push = false
+
+[tool.bumpver.file_patterns]
+"pyproject.toml" = ['current_version = "{version}"', 'version = "{version}"']
