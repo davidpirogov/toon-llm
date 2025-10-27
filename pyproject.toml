@@ -1,6 +1,6 @@
 [project]
 name = "toon-llm"
-version = "1.0.0-beta.1"
+version = "1.0.0-beta.2"
 description = "Token-Oriented Object Notation – Optimised serialization JSON for LLMs"
 readme = "README.md"
 license = { file = "LICENSE" }
