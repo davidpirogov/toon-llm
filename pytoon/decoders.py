@@ -9,7 +9,13 @@ different delimiters, length markers, and array formats.
 import re
 
 from pytoon.errors import DecodeError
-from pytoon.types import JsonArray, JsonObject, JsonPrimitive, JsonValue, ResolvedDecodeOptions
+from pytoon.types import (
+    JsonArray,
+    JsonObject,
+    JsonPrimitive,
+    JsonValue,
+    ResolvedDecodeOptions,
+)
 
 
 class ToonDecoder:
@@ -49,7 +55,9 @@ class ToonDecoder:
         lines = text.split("\n")
         return self._parse_value(lines, 0, 0)[0]
 
-    def _parse_value(self, lines: list[str], line_idx: int, indent: int) -> tuple[JsonValue, int]:
+    def _parse_value(
+        self, lines: list[str], line_idx: int, indent: int
+    ) -> tuple[JsonValue, int]:
         """Parse a value from the given position in lines."""
         line = lines[line_idx].rstrip()
 
@@ -80,7 +88,9 @@ class ToonDecoder:
         # Primitive value
         return self._parse_primitive(stripped), line_idx + 1
 
-    def _parse_array(self, lines: list[str], line_idx: int, indent: int) -> tuple[JsonArray, int]:
+    def _parse_array(
+        self, lines: list[str], line_idx: int, indent: int
+    ) -> tuple[JsonArray, int]:
         """Parse array format."""
         line = lines[line_idx].strip()
 
@@ -107,16 +117,22 @@ class ToonDecoder:
         try:
             expected_length = int(length_str_clean)
         except ValueError as e:
-            raise DecodeError(f"Invalid array length at line {line_idx + 1}: {length_str}") from e
+            raise DecodeError(
+                f"Invalid array length at line {line_idx + 1}: {length_str}"
+            ) from e
 
         # Check for tabular format header: [length]{fields}:
         if remainder.strip().startswith("{"):
-            return self._parse_tabular_array(lines, line_idx, indent, expected_length, length_marker)
+            return self._parse_tabular_array(
+                lines, line_idx, indent, expected_length, length_marker
+            )
 
         # Check if inline array (remainder contains values)
         if remainder.strip():
             if not remainder.startswith(":"):
-                raise DecodeError(f"Expected ':' after array length at line {line_idx + 1}")
+                raise DecodeError(
+                    f"Expected ':' after array length at line {line_idx + 1}"
+                )
             values_text = remainder[1:].strip()
             if values_text:
                 # Inline array with values on same line
@@ -138,7 +154,9 @@ class ToonDecoder:
 
         # Tabular format detection (multi-line tabular without inline header)
         if next_indent > indent and "{" in next_line:
-            return self._parse_tabular_array(lines, line_idx, indent, expected_length, length_marker)
+            return self._parse_tabular_array(
+                lines, line_idx, indent, expected_length, length_marker
+            )
 
         # List format
         return self._parse_list_array(lines, line_idx, indent, expected_length)
@@ -173,7 +191,12 @@ class ToonDecoder:
         return values
 
     def _parse_tabular_array(
-        self, lines: list[str], line_idx: int, indent: int, expected_length: int, length_marker: str
+        self,
+        lines: list[str],
+        line_idx: int,
+        indent: int,
+        expected_length: int,
+        length_marker: str,
     ) -> tuple[JsonArray, int]:
         """Parse tabular array format."""
         line = lines[line_idx].strip()
@@ -186,19 +209,27 @@ class ToonDecoder:
         if remainder.startswith("{"):
             # Inline header: [2]{name,age}:
             if not remainder.endswith(":"):
-                raise DecodeError(f"Expected ':' after tabular header at line {line_idx + 1}")
+                raise DecodeError(
+                    f"Expected ':' after tabular header at line {line_idx + 1}"
+                )
             header_text = remainder[:-1].strip()  # Remove trailing ':'
         elif remainder.startswith(":"):
             # Header on same line after colon: [2]: {name,age}
             header_text = remainder[1:].strip()
         else:
-            raise DecodeError(f"Expected tabular header after array length at line {line_idx + 1}")
+            raise DecodeError(
+                f"Expected tabular header after array length at line {line_idx + 1}"
+            )
 
         if not header_text.startswith("{") or not header_text.endswith("}"):
-            raise DecodeError(f"Invalid tabular header at line {line_idx + 1}: {header_text}")
+            raise DecodeError(
+                f"Invalid tabular header at line {line_idx + 1}: {header_text}"
+            )
 
         fields_text = header_text[1:-1]
-        fields = [f.strip().strip('"') for f in fields_text.split(self.options.delimiter)]
+        fields = [
+            f.strip().strip('"') for f in fields_text.split(self.options.delimiter)
+        ]
 
         # Parse data rows
         rows = []
@@ -231,7 +262,9 @@ class ToonDecoder:
             current_idx += 1
 
         if len(rows) != expected_length:
-            raise DecodeError(f"Tabular array length mismatch: expected {expected_length}, got {len(rows)}")
+            raise DecodeError(
+                f"Tabular array length mismatch: expected {expected_length}, got {len(rows)}"
+            )
 
         return rows, current_idx
 
@@ -254,7 +287,9 @@ class ToonDecoder:
                 break
 
             if current_line.strip().startswith("-"):
-                item, next_idx = self._parse_list_item(lines, current_idx, current_indent)
+                item, next_idx = self._parse_list_item(
+                    lines, current_idx, current_indent
+                )
                 items.append(item)
                 current_idx = next_idx
             else:
@@ -263,11 +298,15 @@ class ToonDecoder:
                 current_idx += 1
 
         if len(items) != expected_length:
-            raise DecodeError(f"List array length mismatch: expected {expected_length}, got {len(items)}")
+            raise DecodeError(
+                f"List array length mismatch: expected {expected_length}, got {len(items)}"
+            )
 
         return items, current_idx
 
-    def _parse_list_item(self, lines: list[str], line_idx: int, indent: int) -> tuple[JsonValue, int]:
+    def _parse_list_item(
+        self, lines: list[str], line_idx: int, indent: int
+    ) -> tuple[JsonValue, int]:
         """Parse list item format."""
         line = lines[line_idx].strip()
         if not line.startswith("-"):
@@ -300,7 +339,9 @@ class ToonDecoder:
         # Parse first key-value pair
         first_content = line[1:].strip()
         if ": " not in first_content:
-            raise DecodeError(f"Expected key-value pair in list item at line {line_idx + 1}")
+            raise DecodeError(
+                f"Expected key-value pair in list item at line {line_idx + 1}"
+            )
 
         key_raw, value = first_content.split(": ", 1)
         key = self._parse_key(key_raw)
@@ -333,7 +374,9 @@ class ToonDecoder:
                     key_raw = stripped_line[:-1]  # Remove trailing colon
                     value = ""
                 else:
-                    raise DecodeError(f"Expected key-value pair at line {current_idx + 1}")
+                    raise DecodeError(
+                        f"Expected key-value pair at line {current_idx + 1}"
+                    )
 
                 # Check if key contains array syntax like "data[2]" or "data[2]{fields}"
                 array_match = re.match(r"^(\w+)\[([^\]]+)\](.*)$", key_raw)
@@ -356,7 +399,9 @@ class ToonDecoder:
                     try:
                         expected_length = int(length_str)
                     except ValueError as e:
-                        raise DecodeError(f"Invalid array length at line {current_idx + 1}: {length_str}") from e
+                        raise DecodeError(
+                            f"Invalid array length at line {current_idx + 1}: {length_str}"
+                        ) from e
 
                     # Check if it's tabular format: has {fields} in remainder
                     if remainder.startswith("{"):
@@ -364,10 +409,15 @@ class ToonDecoder:
                         # remainder format: {fields}
                         brace_end = remainder.find("}")
                         if brace_end == -1:
-                            raise DecodeError(f"Invalid tabular array header at line {current_idx + 1}")
+                            raise DecodeError(
+                                f"Invalid tabular array header at line {current_idx + 1}"
+                            )
 
                         fields_text = remainder[1:brace_end]
-                        fields = [f.strip().strip('"') for f in fields_text.split(self.options.delimiter)] # Parse data rows
+                        fields = [
+                            f.strip().strip('"')
+                            for f in fields_text.split(self.options.delimiter)
+                        ]  # Parse data rows
                         rows = []
                         row_idx = current_idx + 1
                         while row_idx < len(lines):
@@ -382,7 +432,9 @@ class ToonDecoder:
                                 break
 
                             # Parse row values
-                            row_values = self._parse_inline_array_values(row_line.strip())
+                            row_values = self._parse_inline_array_values(
+                                row_line.strip()
+                            )
                             if len(row_values) != len(fields):
                                 raise DecodeError(
                                     f"Row field count mismatch at line {row_idx + 1}: expected {len(fields)}, got {len(row_values)}"
@@ -426,7 +478,9 @@ class ToonDecoder:
                     current_idx += 1
             elif current_indent > indent:
                 # Nested structure - parse it and assign to the last key
-                nested_value, next_idx = self._parse_value(lines, current_idx, current_indent)
+                nested_value, next_idx = self._parse_value(
+                    lines, current_idx, current_indent
+                )
                 if obj:
                     last_key = list(obj.keys())[-1]
                     obj[last_key] = nested_value
@@ -437,7 +491,9 @@ class ToonDecoder:
 
         return obj, current_idx
 
-    def _parse_object(self, lines: list[str], line_idx: int, indent: int) -> tuple[JsonObject, int]:
+    def _parse_object(
+        self, lines: list[str], line_idx: int, indent: int
+    ) -> tuple[JsonObject, int]:
         """Parse object key-value pairs."""
         line = lines[line_idx].strip()
 
@@ -472,17 +528,24 @@ class ToonDecoder:
             try:
                 expected_length = int(length_str)
             except ValueError as e:
-                raise DecodeError(f"Invalid array length at line {line_idx + 1}: {length_str}") from e
+                raise DecodeError(
+                    f"Invalid array length at line {line_idx + 1}: {length_str}"
+                ) from e
 
             # Check if it's tabular format: has {fields} in remainder
             if remainder.startswith("{"):
                 # Tabular format - extract fields part
                 brace_end = remainder.find("}")
                 if brace_end == -1:
-                    raise DecodeError(f"Invalid tabular array header at line {line_idx + 1}")
+                    raise DecodeError(
+                        f"Invalid tabular array header at line {line_idx + 1}"
+                    )
 
                 fields_text = remainder[1:brace_end]
-                fields = [f.strip().strip('"') for f in fields_text.split(self.options.delimiter)]
+                fields = [
+                    f.strip().strip('"')
+                    for f in fields_text.split(self.options.delimiter)
+                ]
 
                 # Parse data rows
                 rows = []
@@ -522,12 +585,16 @@ class ToonDecoder:
             # Check if this is a list format array (value is empty and next line has content)
             elif not value.strip() and line_idx + 1 < len(lines):
                 next_line = lines[line_idx + 1].rstrip()
-                next_indent = len(next_line) - len(next_line.lstrip()) if next_line else 0
+                next_indent = (
+                    len(next_line) - len(next_line.lstrip()) if next_line else 0
+                )
 
                 # If next line is indented more and starts with "-", it's a list format array
                 if next_indent > indent and next_line.strip().startswith("-"):
                     # Parse as list format array
-                    items, next_idx = self._parse_list_array(lines, line_idx, indent, expected_length)
+                    items, next_idx = self._parse_list_array(
+                        lines, line_idx, indent, expected_length
+                    )
                     obj: JsonObject = {key: items}
                     # Continue from where list parsing left off to parse additional fields
                     current_idx = next_idx
@@ -568,7 +635,9 @@ class ToonDecoder:
                 break
 
             # If same indentation level and has key-value pair, it's a peer
-            if current_indent == indent and (": " in current_line or current_line.strip().endswith(":")):
+            if current_indent == indent and (
+                ": " in current_line or current_line.strip().endswith(":")
+            ):
                 stripped_line = current_line.strip()
 
                 # Handle both "key: value" and "key:" (nested object) formats
@@ -578,7 +647,9 @@ class ToonDecoder:
                     key_raw = stripped_line[:-1]  # Remove trailing colon
                     value = ""
                 else:
-                    raise DecodeError(f"Expected key-value pair at line {current_idx + 1}")
+                    raise DecodeError(
+                        f"Expected key-value pair at line {current_idx + 1}"
+                    )
 
                 # Check if key contains array syntax like "tags[2]" or "tags[2]{fields}"
                 array_match = re.match(r"^(\w+)\[([^\]]+)\](.*)$", key_raw)
@@ -601,17 +672,24 @@ class ToonDecoder:
                     try:
                         expected_length = int(length_str)
                     except ValueError as e:
-                        raise DecodeError(f"Invalid array length at line {current_idx + 1}: {length_str}") from e
+                        raise DecodeError(
+                            f"Invalid array length at line {current_idx + 1}: {length_str}"
+                        ) from e
 
                     # Check if it's tabular format: has {fields} in remainder
                     if remainder.startswith("{"):
                         # Tabular format - extract fields part
                         brace_end = remainder.find("}")
                         if brace_end == -1:
-                            raise DecodeError(f"Invalid tabular array header at line {current_idx + 1}")
+                            raise DecodeError(
+                                f"Invalid tabular array header at line {current_idx + 1}"
+                            )
 
                         fields_text = remainder[1:brace_end]
-                        fields = [f.strip().strip('"') for f in fields_text.split(self.options.delimiter)]
+                        fields = [
+                            f.strip().strip('"')
+                            for f in fields_text.split(self.options.delimiter)
+                        ]
 
                         # Parse data rows
                         rows = []
@@ -628,7 +706,9 @@ class ToonDecoder:
                                 break
 
                             # Parse row values
-                            row_values = self._parse_inline_array_values(row_line.strip())
+                            row_values = self._parse_inline_array_values(
+                                row_line.strip()
+                            )
                             if len(row_values) != len(fields):
                                 raise DecodeError(
                                     f"Row field count mismatch at line {row_idx + 1}: expected {len(fields)}, got {len(row_values)}"
@@ -652,12 +732,19 @@ class ToonDecoder:
                     # Check if this is a list format array (value is empty and next line has content)
                     elif not value.strip() and current_idx + 1 < len(lines):
                         next_line = lines[current_idx + 1].rstrip()
-                        next_indent = len(next_line) - len(next_line.lstrip()) if next_line else 0
+                        next_indent = (
+                            len(next_line) - len(next_line.lstrip()) if next_line else 0
+                        )
 
                         # If next line is indented more and starts with "-", it's a list format array
-                        if next_indent > current_indent and next_line.strip().startswith("-"):
+                        if (
+                            next_indent > current_indent
+                            and next_line.strip().startswith("-")
+                        ):
                             # Parse as list format array
-                            items, next_idx = self._parse_list_array(lines, current_idx, current_indent, expected_length)
+                            items, next_idx = self._parse_list_array(
+                                lines, current_idx, current_indent, expected_length
+                            )
                             obj[key] = items
                             current_idx = next_idx
                             continue
@@ -689,7 +776,9 @@ class ToonDecoder:
                 current_idx += 1
             elif current_indent > indent:
                 # Nested structure - parse it and assign to the last key
-                nested_value, next_idx = self._parse_value(lines, current_idx, current_indent)
+                nested_value, next_idx = self._parse_value(
+                    lines, current_idx, current_indent
+                )
                 if obj:
                     last_key = list(obj.keys())[-1]
                     obj[last_key] = nested_value
@@ -759,4 +848,3 @@ class ToonDecoder:
 
         # Return as string
         return value
-

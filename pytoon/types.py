@@ -84,7 +84,9 @@ class ResolvedEncodeOptions(BaseModel):
 
     indent: str = Field(description="Indentation string (spaces)")
     delimiter: str = Field(description="Delimiter character")
-    length_marker: Union[Literal["#"], Literal[False]] = Field(description="Length marker prefix or False")
+    length_marker: Union[Literal["#"], Literal[False]] = Field(
+        description="Length marker prefix or False"
+    )
 
     model_config = ConfigDict(
         frozen=True,

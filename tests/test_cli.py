@@ -155,7 +155,7 @@ class TestCLIEncodeFromFile:
     def test_encode_array_to_file(self, tmp_path):
         """Test encoding an array."""
         input_file = tmp_path / "input.json"
-        input_file.write_text('[1, 2, 3, 4, 5]')
+        input_file.write_text("[1, 2, 3, 4, 5]")
 
         result = runner.invoke(app, ["encode", str(input_file)])
 
@@ -202,7 +202,9 @@ class TestCLIEncodeFromStdin:
         """Test encoding from stdin to output file."""
         output_file = tmp_path / "output.toon"
 
-        result = runner.invoke(app, ["encode", "-o", str(output_file)], input='{"test": true}')
+        result = runner.invoke(
+            app, ["encode", "-o", str(output_file)], input='{"test": true}'
+        )
 
         assert result.exit_code == 0
         assert output_file.exists()
@@ -210,7 +212,7 @@ class TestCLIEncodeFromStdin:
 
     def test_encode_from_stdin_with_delimiter(self):
         """Test encoding from stdin with custom delimiter."""
-        result = runner.invoke(app, ["encode", "--delimiter", "|"], input='[1, 2, 3]')
+        result = runner.invoke(app, ["encode", "--delimiter", "|"], input="[1, 2, 3]")
 
         assert result.exit_code == 0
         assert "[3|]: 1|2|3" in result.stdout
@@ -282,7 +284,9 @@ class TestCLIDecodeFromFile:
         input_file = tmp_path / "input.toon"
         input_file.write_text("test: data")
 
-        result = runner.invoke(app, ["decode", str(input_file), "--validate", "--verbose"])
+        result = runner.invoke(
+            app, ["decode", str(input_file), "--validate", "--verbose"]
+        )
 
         assert result.exit_code == 0
         assert "✓ PyToon format is valid" in result.stderr
@@ -357,7 +361,9 @@ class TestCLIDecodeFromStdin:
         """Test decoding from stdin to output file."""
         output_file = tmp_path / "output.json"
 
-        result = runner.invoke(app, ["decode", "-o", str(output_file)], input="test: true")
+        result = runner.invoke(
+            app, ["decode", "-o", str(output_file)], input="test: true"
+        )
 
         assert result.exit_code == 0
         assert output_file.exists()
@@ -539,7 +545,9 @@ class TestCLIRoundTrip:
         input_file.write_text(json.dumps(original_data))
 
         # Encode with length marker
-        encode_result = runner.invoke(app, ["encode", str(input_file), "--length-marker"])
+        encode_result = runner.invoke(
+            app, ["encode", str(input_file), "--length-marker"]
+        )
         assert encode_result.exit_code == 0
         assert "[#5]:" in encode_result.stdout
 

@@ -37,7 +37,13 @@ def version_callback(value: bool) -> None:
 def main(
     version: Annotated[
         Optional[bool],
-        typer.Option("--version", "-v", callback=version_callback, is_eager=True, help="Show version and exit"),
+        typer.Option(
+            "--version",
+            "-v",
+            callback=version_callback,
+            is_eager=True,
+            help="Show version and exit",
+        ),
     ] = None,
 ) -> None:
     """
@@ -59,11 +65,15 @@ def encode_cmd(
     ] = None,
     output: Annotated[
         Optional[Path],
-        typer.Option("--output", "-o", help="Output file. If not specified, writes to stdout."),
+        typer.Option(
+            "--output", "-o", help="Output file. If not specified, writes to stdout."
+        ),
     ] = None,
     indent: Annotated[
         int,
-        typer.Option("--indent", "-i", help="Number of spaces per indentation level", min=1),
+        typer.Option(
+            "--indent", "-i", help="Number of spaces per indentation level", min=1
+        ),
     ] = 2,
     delimiter: Annotated[
         str,
@@ -154,7 +164,9 @@ def decode_cmd(
     ] = None,
     output: Annotated[
         Optional[Path],
-        typer.Option("--output", "-o", help="Output file. If not specified, writes to stdout."),
+        typer.Option(
+            "--output", "-o", help="Output file. If not specified, writes to stdout."
+        ),
     ] = None,
     delimiter: Annotated[
         str,
@@ -162,11 +174,15 @@ def decode_cmd(
     ] = ",",
     pretty: Annotated[
         bool,
-        typer.Option("--pretty", "-p", help="Pretty-print JSON output with indentation"),
+        typer.Option(
+            "--pretty", "-p", help="Pretty-print JSON output with indentation"
+        ),
     ] = False,
     validate: Annotated[
         bool,
-        typer.Option("--validate", help="Only validate PyToon format without outputting"),
+        typer.Option(
+            "--validate", help="Only validate PyToon format without outputting"
+        ),
     ] = False,
     verbose: Annotated[
         bool,

@@ -54,7 +54,9 @@ class TestInvalidSimpleScenarios:
 
         for data in test_cases:
             result = encode(data)
-            assert not result.endswith("\n"), f"Trailing newline found in: {repr(result)}"
+            assert not result.endswith("\n"), (
+                f"Trailing newline found in: {repr(result)}"
+            )
 
     def test_no_odd_indentation(self) -> None:
         """Test that indentation uses consistent spacing."""
@@ -81,7 +83,9 @@ class TestInvalidSimpleScenarios:
         for data, expected_patterns in test_cases:
             result = encode(data)
             for pattern in expected_patterns:
-                assert pattern in result, f"Expected pattern '{pattern}' not found in: {repr(result)}"
+                assert pattern in result, (
+                    f"Expected pattern '{pattern}' not found in: {repr(result)}"
+                )
 
     def test_no_unquoted_special_keys(self) -> None:
         """Test that keys with special characters are quoted."""
@@ -124,7 +128,9 @@ class TestInvalidSimpleScenarios:
             result = encode(data)
             # Should start with correct length
             expected_length = len(data)
-            assert result.startswith(f"[{expected_length}]"), f"Wrong length in: {repr(result)}"
+            assert result.startswith(f"[{expected_length}]"), (
+                f"Wrong length in: {repr(result)}"
+            )
 
     def test_no_trailing_commas_in_arrays(self) -> None:
         """Test that arrays don't have trailing commas."""
@@ -139,7 +145,9 @@ class TestInvalidSimpleScenarios:
             # Should not end with comma
             if data:  # Non-empty arrays
                 content_part = result.split("]: ", 1)[1] if "]: " in result else ""
-                assert not content_part.endswith(","), f"Trailing comma in: {repr(result)}"
+                assert not content_part.endswith(","), (
+                    f"Trailing comma in: {repr(result)}"
+                )
 
     def test_no_leading_commas_in_arrays(self) -> None:
         """Test that arrays don't have leading commas."""
@@ -154,7 +162,9 @@ class TestInvalidSimpleScenarios:
             # Should not start with comma after length indicator
             if data:  # Non-empty arrays
                 content_part = result.split("]: ", 1)[1] if "]: " in result else ""
-                assert not content_part.startswith(","), f"Leading comma in: {repr(result)}"
+                assert not content_part.startswith(","), (
+                    f"Leading comma in: {repr(result)}"
+                )
 
     def test_tabular_format_constraints(self) -> None:
         """Test tabular format constraints."""
@@ -255,7 +265,7 @@ class TestInvalidComplexScenarios:
         data = {
             "users": [
                 {"profile": {"settings": {"theme": "dark"}}},
-                {"profile": {"settings": {"theme": "light"}}}
+                {"profile": {"settings": {"theme": "light"}}},
             ]
         }
         result = encode(data)
@@ -287,7 +297,7 @@ class TestInvalidComplexScenarios:
             "items": [
                 {"id": 1, "name": "Alice", "age": 30},
                 {"id": 2, "name": "Bob", "age": 25},
-                {"id": 3, "name": "Charlie", "age": 35}
+                {"id": 3, "name": "Charlie", "age": 35},
             ]
         }
         result = encode(data)
@@ -297,7 +307,11 @@ class TestInvalidComplexScenarios:
 
         # All rows should have same number of columns
         lines = result.split("\n")
-        data_lines = [line for line in lines if line.strip() and not line.startswith("[") and not line.startswith("{")]
+        data_lines = [
+            line
+            for line in lines
+            if line.strip() and not line.startswith("[") and not line.startswith("{")
+        ]
         for line in data_lines:
             column_count = line.count(",") + 1
             assert column_count == 3, f"Inconsistent columns in: {repr(line)}"
@@ -342,7 +356,9 @@ class TestFormatInvariants:
                 # No tabs (unless using tab delimiter)
                 if "\t" in line and not result.startswith("["):
                     # Only allow tabs in array length indicators when using tab delimiter
-                    assert ": " in line or line.startswith("["), f"Unexpected tab in: {repr(line)}"
+                    assert ": " in line or line.startswith("["), (
+                        f"Unexpected tab in: {repr(line)}"
+                    )
 
     def test_options_validation(self) -> None:
         """Test that encoding options are properly validated."""

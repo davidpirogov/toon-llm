@@ -5,7 +5,13 @@ from typing import Any, Literal, Union
 from pytoon.decoders import ToonDecoder
 from pytoon.encoders import encode_value
 from pytoon.normalize import normalize_value
-from pytoon.types import DecodeOptions, EncodeOptions, JsonValue, ResolvedDecodeOptions, ResolvedEncodeOptions
+from pytoon.types import (
+    DecodeOptions,
+    EncodeOptions,
+    JsonValue,
+    ResolvedDecodeOptions,
+    ResolvedEncodeOptions,
+)
 
 
 def encode(

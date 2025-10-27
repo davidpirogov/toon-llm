@@ -63,7 +63,7 @@ def encode_primitive(value: JsonPrimitive, delimiter: str = COMMA) -> str:
             abs_val = abs(value)
             if abs_val == 0 or (1e-6 <= abs_val <= 1e15):
                 # Format without scientific notation, removing trailing zeros
-                formatted = f"{value:.15f}".rstrip('0').rstrip('.')
+                formatted = f"{value:.15f}".rstrip("0").rstrip(".")
                 return formatted
             # For very large or very small numbers, use default string representation
             return str(value)

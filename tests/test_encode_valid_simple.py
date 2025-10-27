@@ -307,7 +307,9 @@ def test_all_valid_simple_samples(sample_name: str) -> None:
     elif sample_name == "valid-simple-array-with-quotes":
         assert encode(["a", "b,c", "d:e"]) == expected
     elif sample_name == "valid-simple-array-tabular":
-        assert encode([{"id": 1, "name": "Alice"}, {"id": 2, "name": "Bob"}]) == expected
+        assert (
+            encode([{"id": 1, "name": "Alice"}, {"id": 2, "name": "Bob"}]) == expected
+        )
     else:
         # For samples not yet implemented, just verify the file can be loaded
         assert expected is not None, f"Failed to load sample: {sample_name}"

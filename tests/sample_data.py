@@ -64,7 +64,9 @@ def get_sample(sample_name: str) -> str:
 
         # Check if the resolved path is under the samples directory
         if not str(resolved_path).startswith(str(resolved_samples_dir)):
-            raise FileNotFoundError(f"Sample path is outside samples directory: {sample_name}")
+            raise FileNotFoundError(
+                f"Sample path is outside samples directory: {sample_name}"
+            )
     except (OSError, RuntimeError) as e:
         raise FileNotFoundError(f"Invalid sample path: {sample_name}") from e
 

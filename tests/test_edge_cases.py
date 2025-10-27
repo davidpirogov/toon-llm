@@ -39,9 +39,9 @@ class TestPrimitiveEdgeCases:
 
     def test_non_finite_numbers(self) -> None:
         """Test encoding of non-finite numbers."""
-        assert encode(float('inf')) == "null"
-        assert encode(float('-inf')) == "null"
-        assert encode(float('nan')) == "null"
+        assert encode(float("inf")) == "null"
+        assert encode(float("-inf")) == "null"
+        assert encode(float("nan")) == "null"
 
     def test_very_large_numbers(self) -> None:
         """Test encoding of very large numbers."""
@@ -122,12 +122,7 @@ class TestObjectEdgeCases:
 
     def test_mixed_key_types(self) -> None:
         """Test encoding of objects with mixed key types."""
-        data = {
-            "string_key": "value1",
-            123: "value2",
-            True: "value3",
-            None: "value4"
-        }
+        data = {"string_key": "value1", 123: "value2", True: "value3", None: "value4"}
         result = encode(data)
 
         # String keys should be unquoted, others quoted
@@ -198,6 +193,7 @@ class TestComplexDataTypes:
 
     def test_dataclass_encoding(self) -> None:
         """Test encoding of dataclass objects."""
+
         @dataclass
         class Person:
             name: str
@@ -369,15 +365,7 @@ class TestFormatValidation:
 
     def test_consistent_indentation(self) -> None:
         """Test that indentation is consistent throughout."""
-        data = {
-            "level1": {
-                "level2": {
-                    "level3": {
-                        "level4": "deep"
-                    }
-                }
-            }
-        }
+        data = {"level1": {"level2": {"level3": {"level4": "deep"}}}}
         result = encode(data)
 
         lines = result.split("\n")

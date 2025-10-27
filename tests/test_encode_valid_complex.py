@@ -63,7 +63,7 @@ class TestNestedStructures:
                 "name": "Ada",
                 "tags": ["reading", "gaming"],
                 "active": True,
-                "prefs": []
+                "prefs": [],
             }
         }
         assert encode(data) == expected
@@ -87,7 +87,7 @@ class TestNestedStructures:
             "items": [
                 {
                     "users": [{"id": 1, "name": "Ada"}, {"id": 2, "name": "Bob"}],
-                    "status": "active"
+                    "status": "active",
                 }
             ]
         }
@@ -103,7 +103,7 @@ class TestListFormat:
         data = {
             "items": [
                 {"id": 1, "name": "First"},
-                {"id": 2, "name": "Second", "extra": True}
+                {"id": 2, "name": "Second", "extra": True},
             ]
         }
         assert encode(data) == expected
@@ -111,21 +111,13 @@ class TestListFormat:
     def test_list_format_nested(self) -> None:
         """Test list format with nested objects."""
         expected = get_sample("valid-complex-list-format-nested")
-        data = {
-            "items": [
-                {"id": 1, "nested": {"x": 1, "y": 2}}
-            ]
-        }
+        data = {"items": [{"id": 1, "nested": {"x": 1, "y": 2}}]}
         assert encode(data) == expected
 
     def test_list_multiple_arrays(self) -> None:
         """Test list format with multiple arrays."""
         expected = get_sample("valid-complex-list-multiple-arrays")
-        data = {
-            "items": [
-                {"nums": [1, 2, 3], "tags": ["a", "b"], "name": "test"}
-            ]
-        }
+        data = {"items": [{"nums": [1, 2, 3], "tags": ["a", "b"], "name": "test"}]}
         assert encode(data) == expected
 
 
@@ -145,12 +137,7 @@ class TestTabularFormats:
     def test_tabular_with_null(self) -> None:
         """Test tabular format with null values."""
         expected = get_sample("valid-complex-tabular-with-null")
-        data = {
-            "items": [
-                {"id": 1, "value": None},
-                {"id": 2, "value": "test"}
-            ]
-        }
+        data = {"items": [{"id": 1, "value": None}, {"id": 2, "value": "test"}]}
         assert encode(data) == expected
 
     def test_tabular_with_floats(self) -> None:
@@ -159,7 +146,7 @@ class TestTabularFormats:
         data = {
             "items": [
                 {"sku": "A1", "qty": 2, "price": 9.99},
-                {"sku": "B2", "qty": 1, "price": 14.5}
+                {"sku": "B2", "qty": 1, "price": 14.5},
             ]
         }
         assert encode(data) == expected
@@ -170,7 +157,7 @@ class TestTabularFormats:
         data = {
             "items": [
                 {"sku": "A,1", "desc": "cool", "qty": 2},
-                {"sku": "B2", "desc": "wip: test", "qty": 1}
+                {"sku": "B2", "desc": "wip: test", "qty": 1},
             ]
         }
         assert encode(data) == expected
@@ -181,7 +168,7 @@ class TestTabularFormats:
         data = {
             "items": [
                 {"order:id": 1, "full name": "Ada"},
-                {"order:id": 2, "full name": "Bob"}
+                {"order:id": 2, "full name": "Bob"},
             ]
         }
         assert encode(data) == expected
@@ -311,7 +298,7 @@ def test_complex_samples_without_options(sample_name: str) -> None:
                 "name": "Ada",
                 "tags": ["reading", "gaming"],
                 "active": True,
-                "prefs": []
+                "prefs": [],
             }
         }
         assert encode(data) == expected
@@ -326,7 +313,7 @@ def test_complex_samples_without_options(sample_name: str) -> None:
             "items": [
                 {
                     "users": [{"id": 1, "name": "Ada"}, {"id": 2, "name": "Bob"}],
-                    "status": "active"
+                    "status": "active",
                 }
             ]
         }
@@ -335,40 +322,27 @@ def test_complex_samples_without_options(sample_name: str) -> None:
         data = {
             "items": [
                 {"id": 1, "name": "First"},
-                {"id": 2, "name": "Second", "extra": True}
+                {"id": 2, "name": "Second", "extra": True},
             ]
         }
         assert encode(data) == expected
     elif sample_name == "valid-complex-list-format-nested":
-        data = {
-            "items": [
-                {"id": 1, "nested": {"x": 1, "y": 2}}
-            ]
-        }
+        data = {"items": [{"id": 1, "nested": {"x": 1, "y": 2}}]}
         assert encode(data) == expected
     elif sample_name == "valid-complex-list-multiple-arrays":
-        data = {
-            "items": [
-                {"nums": [1, 2, 3], "tags": ["a", "b"], "name": "test"}
-            ]
-        }
+        data = {"items": [{"nums": [1, 2, 3], "tags": ["a", "b"], "name": "test"}]}
         assert encode(data) == expected
     elif sample_name == "valid-complex-mixed-primitives-objects":
         data = {"items": [1, {"a": 1}, "text"]}
         assert encode(data) == expected
     elif sample_name == "valid-complex-tabular-with-null":
-        data = {
-            "items": [
-                {"id": 1, "value": None},
-                {"id": 2, "value": "test"}
-            ]
-        }
+        data = {"items": [{"id": 1, "value": None}, {"id": 2, "value": "test"}]}
         assert encode(data) == expected
     elif sample_name == "valid-complex-tabular-with-floats":
         data = {
             "items": [
                 {"sku": "A1", "qty": 2, "price": 9.99},
-                {"sku": "B2", "qty": 1, "price": 14.5}
+                {"sku": "B2", "qty": 1, "price": 14.5},
             ]
         }
         assert encode(data) == expected
@@ -376,7 +350,7 @@ def test_complex_samples_without_options(sample_name: str) -> None:
         data = {
             "items": [
                 {"sku": "A,1", "desc": "cool", "qty": 2},
-                {"sku": "B2", "desc": "wip: test", "qty": 1}
+                {"sku": "B2", "desc": "wip: test", "qty": 1},
             ]
         }
         assert encode(data) == expected
@@ -384,7 +358,7 @@ def test_complex_samples_without_options(sample_name: str) -> None:
         data = {
             "items": [
                 {"order:id": 1, "full name": "Ada"},
-                {"order:id": 2, "full name": "Bob"}
+                {"order:id": 2, "full name": "Bob"},
             ]
         }
         assert encode(data) == expected
