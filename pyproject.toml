@@ -9,6 +9,7 @@ dependencies = [
     "better-exceptions>=0.3.3",
     "bumpver>=2025.1131",
     "coverage>=7.11.0",
+    "pydantic>=2.12.3",
     "pytest>=8.4.2",
     "tox>=4.32.0",
 ]
