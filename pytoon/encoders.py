@@ -15,7 +15,7 @@ Encoding strategies:
 
 from typing import Literal, Optional, Sequence, Union
 
-from pytoon.constants import LIST_ITEM_MARKER, LIST_ITEM_PREFIX
+from pytoon.constants import LIST_ITEM_PREFIX
 from pytoon.normalize import (
     is_array_of_arrays,
     is_array_of_objects,
@@ -101,7 +101,9 @@ def encode_object(
     keys = list(value.keys())
 
     for key in keys:
-        encode_key_value_pair(key, value[key], writer, depth, options)
+        # Convert non-string keys to strings
+        key_str = str(key) if not isinstance(key, str) else key
+        encode_key_value_pair(key_str, value[key], writer, depth, options)
 
 
 def encode_key_value_pair(
@@ -440,12 +442,13 @@ def encode_object_as_list_item(
     """
     keys = list(obj.keys())
     if len(keys) == 0:
-        writer.push(depth, LIST_ITEM_MARKER)
+        writer.push(depth, "- ")  # Empty object in list format uses "- " for consistency
         return
 
     # First key-value on the same line as "- "
     first_key = keys[0]
-    encoded_key = encode_key(first_key)
+    first_key_str = str(first_key) if not isinstance(first_key, str) else first_key
+    encoded_key = encode_key(first_key_str)
     first_value = obj[first_key]
 
     if is_json_primitive(first_value):
@@ -456,7 +459,9 @@ def encode_object_as_list_item(
     elif is_json_array(first_value):
         if is_array_of_primitives(first_value):
             # Inline format for primitive arrays
-            formatted = format_inline_array(first_value, options.delimiter, first_key, options.length_marker)
+            formatted = format_inline_array(
+                first_value, options.delimiter, first_key_str, options.length_marker
+            )
             writer.push(depth, f"{LIST_ITEM_PREFIX}{formatted}")
         elif is_array_of_objects(first_value):
             # Check if array of objects can use tabular format
@@ -465,13 +470,13 @@ def encode_object_as_list_item(
                 # Tabular format for uniform arrays of objects
                 header_str = format_header(
                     len(first_value),
-                    key=first_key,
+                    key=first_key_str,
                     fields=header,
                     delimiter=options.delimiter,
                     length_marker=options.length_marker,
                 )
                 writer.push(depth, f"{LIST_ITEM_PREFIX}{header_str}")
-                write_tabular_rows(first_value, header, writer, depth + 1, options)
+                write_tabular_rows(first_value, header, writer, depth + 2, options)
             else:
                 # Fall back to list format for non-uniform arrays of objects
                 writer.push(depth, f"{LIST_ITEM_PREFIX}{encoded_key}[{len(first_value)}]:")
@@ -507,4 +512,5 @@ def encode_object_as_list_item(
     # Remaining keys on indented lines
     for i in range(1, len(keys)):
         key = keys[i]
-        encode_key_value_pair(key, obj[key], writer, depth + 1, options)
+        key_str = str(key) if not isinstance(key, str) else key
+        encode_key_value_pair(key_str, obj[key], writer, depth + 1, options)

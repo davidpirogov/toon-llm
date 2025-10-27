@@ -35,7 +35,7 @@ class EncodeOptions(BaseModel):
     after creation to prevent accidental modifications.
 
     Attributes:
-        indent: Number of spaces per indentation level (default: 2, minimum: 0)
+        indent: Number of spaces per indentation level (default: 2, minimum: 1)
         delimiter: Delimiter character for arrays and tables (default: comma)
         length_marker: Optional "#" prefix for array lengths, or False to disable (default: False)
 
@@ -47,7 +47,7 @@ class EncodeOptions(BaseModel):
 
     indent: int = Field(
         default=2,
-        ge=0,
+        ge=1,
         description="Number of spaces per indentation level",
     )
     delimiter: str = Field(
@@ -107,3 +107,63 @@ class ResolvedEncodeOptions(BaseModel):
             delimiter=options.delimiter,
             length_marker=options.length_marker,
         )
+
+
+class DecodeOptions(BaseModel):
+    r"""
+    Configuration options for PyToon decoding.
+
+    All fields are optional and have sensible defaults. The model is frozen
+    after creation to prevent accidental modifications.
+
+    Attributes:
+        delimiter: Delimiter character used in the TOON format (default: comma)
+
+    Examples:
+        >>> options = DecodeOptions()  # Use default
+        >>> options = DecodeOptions(delimiter=Delimiters.pipe)
+        >>> options = DecodeOptions(delimiter="\t")
+    """
+
+    delimiter: str = Field(
+        default=Delimiters.comma,
+        description="Delimiter for arrays and tables",
+    )
+
+    model_config = ConfigDict(
+        frozen=True,
+        extra="forbid",
+        validate_default=True,
+    )
+
+
+class ResolvedDecodeOptions(BaseModel):
+    """
+    Resolved decoding options with all fields required.
+
+    This is the internal representation used during decoding, where all
+    optional values have been resolved to their concrete values.
+
+    Attributes:
+        delimiter: Delimiter character
+    """
+
+    delimiter: str = Field(description="Delimiter character")
+
+    model_config = ConfigDict(
+        frozen=True,
+        extra="forbid",
+    )
+
+    @classmethod
+    def from_options(cls, options: DecodeOptions) -> "ResolvedDecodeOptions":
+        """
+        Create a ResolvedDecodeOptions from a DecodeOptions instance.
+
+        Args:
+            options: The source decoding options
+
+        Returns:
+            A resolved options instance
+        """
+        return cls(delimiter=options.delimiter)

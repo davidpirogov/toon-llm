@@ -12,7 +12,7 @@ from typing import Any, TypeGuard
 from pytoon.types import JsonArray, JsonObject, JsonPrimitive, JsonValue
 
 
-def normalize_value(value: Any) -> JsonValue:
+def normalize_value(value: Any, _seen: set[int] | None = None) -> JsonValue:
     """
     Normalize an arbitrary Python value to a JSON-compatible value.
 
@@ -26,9 +26,11 @@ def normalize_value(value: Any) -> JsonValue:
     - dataclasses → dicts via asdict()
     - Pydantic models → dicts via model_dump()
     - Non-serializable values → None
+    - Circular references → None
 
     Args:
         value: Any Python object
+        _seen: Internal parameter for tracking visited objects (circular reference detection)
 
     Returns:
         A JSON-compatible value (primitive, list, or dict)
@@ -43,11 +45,15 @@ def normalize_value(value: Any) -> JsonValue:
         >>> normalize_value(datetime(2024, 1, 1))
         '2024-01-01T00:00:00'
     """
+    # Initialize seen set on first call
+    if _seen is None:
+        _seen = set()
+
     # Handle None explicitly
     if value is None:
         return None
 
-    # Primitives: str, bool
+    # Primitives: str, bool (immutable, no circular reference issues)
     if isinstance(value, (str, bool)):
         return value
 
@@ -67,35 +73,47 @@ def normalize_value(value: Any) -> JsonValue:
     if isinstance(value, datetime):
         return value.isoformat()
 
-    # Lists and tuples → recursively normalized lists
-    if isinstance(value, (list, tuple)):
-        return [normalize_value(item) for item in value]
+    # Check for circular references (for mutable objects)
+    obj_id = id(value)
+    if obj_id in _seen:
+        return None  # Circular reference detected, replace with null
 
-    # Sets → sorted list (for deterministic output)
-    if isinstance(value, set):
-        # Try to sort if possible, otherwise just convert to list
-        try:
-            return [normalize_value(item) for item in sorted(value)]
-        except TypeError:
-            # Items are not comparable, just convert to list
-            return [normalize_value(item) for item in value]
+    # Add to seen set for duration of normalization
+    _seen.add(obj_id)
 
-    # Dataclasses → dict
-    if is_dataclass(value) and not isinstance(value, type):
-        return normalize_value(asdict(value))
+    try:
+        # Lists and tuples → recursively normalized lists
+        if isinstance(value, (list, tuple)):
+            return [normalize_value(item, _seen) for item in value]
 
-    # Pydantic models → dict
-    if hasattr(value, "model_dump") and callable(value.model_dump):  # type: ignore[attr-defined]
-        return normalize_value(value.model_dump())  # type: ignore[attr-defined]
+        # Sets → sorted list (for deterministic output)
+        if isinstance(value, set):
+            # Try to sort if possible, otherwise just convert to list
+            try:
+                return [normalize_value(item, _seen) for item in sorted(value)]
+            except TypeError:
+                # Items are not comparable, just convert to list
+                return [normalize_value(item, _seen) for item in value]
 
-    # Plain dicts → recursively normalized dicts
-    if isinstance(value, dict):
-        result: dict[str, JsonValue] = {}
-        for key, val in value.items():
-            # Convert non-string keys to strings
-            str_key = str(key) if not isinstance(key, str) else key
-            result[str_key] = normalize_value(val)
-        return result
+        # Dataclasses → dict
+        if is_dataclass(value) and not isinstance(value, type):
+            return normalize_value(asdict(value), _seen)
+
+        # Pydantic models → dict
+        if hasattr(value, "model_dump") and callable(value.model_dump):  # type: ignore[attr-defined]
+            return normalize_value(value.model_dump(), _seen)  # type: ignore[attr-defined]
+
+        # Plain dicts → recursively normalized dicts
+        if isinstance(value, dict):
+            result: dict[str, JsonValue] = {}
+            for key, val in value.items():
+                # Convert non-string keys to strings
+                str_key = str(key) if not isinstance(key, str) else key
+                result[str_key] = normalize_value(val, _seen)
+            return result
+    finally:
+        # Remove from seen set after processing
+        _seen.discard(obj_id)
 
     # Fallback: functions, modules, classes, etc. → None
     return None

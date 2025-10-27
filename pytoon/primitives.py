@@ -6,6 +6,7 @@ booleans, null), handling string escaping and quoting, key encoding, and header
 formatting for arrays and tables.
 """
 
+import math
 import re
 from typing import Literal, Optional, Sequence, Union
 
@@ -50,6 +51,22 @@ def encode_primitive(value: JsonPrimitive, delimiter: str = COMMA) -> str:
         return TRUE_LITERAL if value else FALSE_LITERAL
 
     if isinstance(value, (int, float)):
+        # Handle non-finite floats (inf, -inf, nan) as null
+        if isinstance(value, float) and not math.isfinite(value):
+            return NULL_LITERAL
+        # Normalize floats that are whole numbers to integers for cleaner output
+        if isinstance(value, float) and value.is_integer():
+            return str(int(value))
+        # For floats, avoid scientific notation for reasonable-sized numbers
+        if isinstance(value, float):
+            # Check if the number is in a reasonable range to expand
+            abs_val = abs(value)
+            if abs_val == 0 or (1e-6 <= abs_val <= 1e15):
+                # Format without scientific notation, removing trailing zeros
+                formatted = f"{value:.15f}".rstrip('0').rstrip('.')
+                return formatted
+            # For very large or very small numbers, use default string representation
+            return str(value)
         return str(value)
 
     # String
@@ -81,17 +98,20 @@ def encode_string_literal(value: str, delimiter: str = COMMA) -> str:
     if is_safe_unquoted(value, delimiter):
         return value
 
-    return f"{DOUBLE_QUOTE}{escape_string(value)}{DOUBLE_QUOTE}"
+    return f"{DOUBLE_QUOTE}{escape_string(value, delimiter)}{DOUBLE_QUOTE}"
 
 
-def escape_string(value: str) -> str:
+def escape_string(value: str, delimiter: str = COMMA) -> str:
     r"""
     Escape special characters in a string for quoted output.
 
     Escapes backslashes, double quotes, newlines, carriage returns, and tabs.
+    However, if the delimiter character would normally be escaped (like tab),
+    it is NOT escaped - it remains literal in the output.
 
     Args:
         value: The string to escape
+        delimiter: The current delimiter (default: comma)
 
     Returns:
         The escaped string
@@ -101,14 +121,21 @@ def escape_string(value: str) -> str:
         'hello \\"world\\"'
         >>> escape_string('line1\nline2')
         'line1\\nline2'
+        >>> escape_string('a\tb', '\t')
+        'a\tb'
+        >>> escape_string('a\tb', ',')
+        'a\\tb'
     """
-    return (
+    result = (
         value.replace(BACKSLASH, f"{BACKSLASH}{BACKSLASH}")
         .replace(DOUBLE_QUOTE, f"{BACKSLASH}{DOUBLE_QUOTE}")
         .replace("\n", f"{BACKSLASH}n")
         .replace("\r", f"{BACKSLASH}r")
-        .replace("\t", f"{BACKSLASH}t")
     )
+    # Only escape tab if it's not the delimiter
+    if delimiter != "\t":
+        result = result.replace("\t", f"{BACKSLASH}t")
+    return result
 
 
 def is_safe_unquoted(value: str, delimiter: str = COMMA) -> bool:
@@ -243,7 +270,8 @@ def _is_valid_unquoted_key(key: str) -> bool:
     Check if a key can be left unquoted.
 
     Valid unquoted keys start with a letter or underscore and contain only
-    letters, digits, underscores, and dots.
+    letters, digits, underscores, and dots. However, keys that look like
+    reserved words (true, false, null, None, True, False) must be quoted.
 
     Args:
         key: The key to check
@@ -251,6 +279,9 @@ def _is_valid_unquoted_key(key: str) -> bool:
     Returns:
         True if the key can be safely left unquoted
     """
+    # Keys that look like reserved words must be quoted
+    if key in ("true", "false", "null", "True", "False", "None"):
+        return False
     return bool(re.match(r"^[A-Z_][\w.]*$", key, re.IGNORECASE))
 
 
