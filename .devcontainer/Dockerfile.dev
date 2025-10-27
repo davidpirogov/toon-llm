@@ -1,0 +1,49 @@
+ARG UV_VERSION=0.8.13
+
+FROM ghcr.io/astral-sh/uv:${UV_VERSION} AS uv
+
+FROM mcr.microsoft.com/devcontainers/base:bookworm
+
+COPY --from=uv /uv /uvx /bin/
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+USER root
+
+WORKDIR /app
+
+COPY .devcontainer/rc/.bashrc /home/vscode/.bashrc
+
+# Base setup
+# trunk-ignore(hadolint/DL3008)
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ca-certificates \
+    curl \
+    git \
+    iputils-ping \
+    gnupg2 \
+    pinentry-curses \
+    openssh-client \
+    unzip \
+    software-properties-common \
+    p7zip-full \
+    bash-completion \
+    build-essential \
+    vim \
+    yq \
+    && rm -rf /var/lib/apt/lists/* \
+    && chown vscode:vscode /home/vscode/.bashrc
+
+USER vscode
+
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+
+ENV BASH_ENV /home/vscode/.bash_env
+
+RUN touch "${BASH_ENV}" \
+    && echo ". \"${BASH_ENV}\"" >> ~/.bashrc
+
+WORKDIR /app
+
+HEALTHCHECK --interval=60s --timeout=5s --start-period=60s --retries=3 \
+    CMD test -d /app && whoami || exit 1

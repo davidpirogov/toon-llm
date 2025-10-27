@@ -1,0 +1,32 @@
+{
+    "name": "toon (devcontainer)",
+    "dockerComposeFile": ["../docker-compose.dev.yml"],
+    "service": "py-toon-dev",
+    "workspaceFolder": "/app",
+    "features": {
+        "ghcr.io/devcontainers/features/git:1": {},
+        "ghcr.io/devcontainers/features/github-cli:1": {}
+    },
+    "forwardPorts": [],
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-vscode-remote.remote-containers",
+                "trunk.io",
+                "EditorConfig.EditorConfig",
+                "eamodio.gitlens",
+                "ms-python.python",
+                "ms-python.vscode-pylance",
+                "GitHub.copilot"
+            ],
+            "settings": {
+                "terminal.integrated.defaultProfile.linux": "bash",
+                "git.enabled": true,
+                "git.enableCommitSigning": true,
+                "github.copilot": {
+                    "enable": true
+                }
+            }
+        }
+    }
+}
