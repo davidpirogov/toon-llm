@@ -168,7 +168,7 @@ def is_safe_unquoted(value: str, delimiter: str = COMMA) -> bool:
         return False
 
     # Brackets and braces (always structural)
-    if re.search(r"[[\]{}]", value):
+    if re.search(r"[\[\]{}]", value):
         return False
 
     # Control characters (newline, carriage return, tab)
