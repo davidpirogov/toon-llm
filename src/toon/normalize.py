@@ -9,7 +9,7 @@ from dataclasses import asdict, is_dataclass
 from datetime import datetime
 from typing import Any, TypeGuard
 
-from pytoon.types import JsonArray, JsonObject, JsonPrimitive, JsonValue
+from toon.types import JsonArray, JsonObject, JsonPrimitive, JsonValue
 
 
 def normalize_value(value: Any, _seen: set[int] | None = None) -> JsonValue:

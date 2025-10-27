@@ -1,11 +1,11 @@
-"""This module contains utility functions for the PyToon library."""
+"""This module contains utility functions for the TOON LLM library."""
 
 from typing import Any, Literal, Union
 
-from pytoon.decoders import ToonDecoder
-from pytoon.encoders import encode_value
-from pytoon.normalize import normalize_value
-from pytoon.types import (
+from toon.decoders import ToonDecoder
+from toon.encoders import encode_value
+from toon.normalize import normalize_value
+from toon.types import (
     DecodeOptions,
     EncodeOptions,
     JsonValue,
@@ -22,9 +22,9 @@ def encode(
     length_marker: Union[Literal["#"], Literal[False]] = False,
 ) -> str:
     r"""
-    Encode Python data structures into PyToon format.
+    Encode Python data structures into TOON LLM format.
 
-    This is the main entry point for the PyToon library. It accepts any Python
+    This is the main entry point for the TOON LLM library. It accepts any Python
     object and converts it to a human-readable text format.
 
     Type conversions:
@@ -45,7 +45,7 @@ def encode(
                       When "#", arrays render as [#N] instead of [N]
 
     Returns:
-        PyToon-formatted string
+        TOON LLM-formatted string
 
     Raises:
         ValidationError: If options are invalid (e.g., negative indent)
@@ -88,7 +88,7 @@ def encode(
     # Normalize data to JSON-compatible values
     normalized = normalize_value(data)
 
-    # Encode to PyToon format
+    # Encode to TOON LLM format
     return encode_value(normalized, resolved)
 
 
@@ -154,5 +154,5 @@ def decode(
     # Create decoder with resolved options
     decoder = ToonDecoder(resolved)
 
-    # Decode from PyToon format
+    # Decode from TOON LLM format
     return decoder.decode(text)

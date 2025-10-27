@@ -1,12 +1,12 @@
 """
-PyToon: A human-readable data serialization format for Python.
+TOON LLM: A human-readable data serialization format for Python.
 
-PyToon provides a clean, readable way to serialize Python data structures
+TOON LLM provides a clean, readable way to serialize Python data structures
 into a format that's more compact and easier to read than JSON, while
 maintaining full compatibility with JSON-like data structures.
 
 Basic usage:
-    >>> from pytoon import encode, decode
+    >>> from toon import encode, decode
     >>> data = {"name": "Alice", "age": 30, "active": True}
     >>> encoded = encode(data)
     >>> print(encoded)
@@ -28,9 +28,9 @@ Features:
 
 from importlib.metadata import version as _get_version
 
-from pytoon.constants import Delimiters
-from pytoon.errors import DecodeError, EncodeError
-from pytoon.types import (
+from toon.constants import Delimiters
+from toon.errors import DecodeError, EncodeError
+from toon.types import (
     DecodeOptions,
     EncodeOptions,
     JsonArray,
@@ -40,9 +40,9 @@ from pytoon.types import (
     ResolvedDecodeOptions,
     ResolvedEncodeOptions,
 )
-from pytoon.utils import decode, encode
+from toon.utils import decode, encode
 
-__version__ = _get_version("py-toon")
+__version__ = _get_version("toon-llm")
 
 __all__ = [
     "encode",

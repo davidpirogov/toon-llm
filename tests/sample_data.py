@@ -1,5 +1,5 @@
 """
-Sample data loader for PyToon tests.
+Sample data loader for TOON LLM tests.
 
 This module provides utilities to read .toon sample files from the specification/samples/ directory.
 Sample files are language-agnostic text files that contain TOON-formatted data.

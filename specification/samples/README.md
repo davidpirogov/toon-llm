@@ -1,6 +1,6 @@
 # TOON Sample Files
 
-This directory contains sample `.toon` files for testing the PyToon encoder.
+This directory contains sample `.toon` files for testing the TOON LLM encoder.
 
 ## Directory Structure
 
@@ -41,7 +41,7 @@ These files are used by the test suite to verify:
 
 ```python
 from pathlib import Path
-from pytoon import encode
+from toon import encode
 from tests.samples import sample_data
 
 # Test a valid simple sample

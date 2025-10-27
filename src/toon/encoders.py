@@ -15,8 +15,8 @@ Encoding strategies:
 
 from typing import Literal, Optional, Sequence, Union
 
-from pytoon.constants import LIST_ITEM_PREFIX
-from pytoon.normalize import (
+from toon.constants import LIST_ITEM_PREFIX
+from toon.normalize import (
     is_array_of_arrays,
     is_array_of_objects,
     is_array_of_primitives,
@@ -24,13 +24,13 @@ from pytoon.normalize import (
     is_json_object,
     is_json_primitive,
 )
-from pytoon.primitives import (
+from toon.primitives import (
     encode_key,
     encode_primitive,
     format_header,
     join_encoded_values,
 )
-from pytoon.types import (
+from toon.types import (
     Depth,
     JsonArray,
     JsonObject,
@@ -38,7 +38,7 @@ from pytoon.types import (
     JsonValue,
     ResolvedEncodeOptions,
 )
-from pytoon.writer import LineWriter
+from toon.writer import LineWriter
 
 
 def _check_type(

@@ -171,7 +171,7 @@ This directory contains **117 sample files** organized into four categories:
 ### Testing Valid Files
 ```python
 from pathlib import Path
-from pytoon import encode
+from toon import encode
 from tests.samples.sample_data import get_valid_simple_sample
 
 def test_valid_simple_integer():

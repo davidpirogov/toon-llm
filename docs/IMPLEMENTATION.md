@@ -1,6 +1,6 @@
-# PyToon Python Implementation Guide
+# TOON LLM Python Implementation Guide
 
-Complete API reference and usage guide for the PyToon Python library.
+Complete API reference and usage guide for the TOON LLM Python library.
 
 ## Table of Contents
 
@@ -23,16 +23,16 @@ Complete API reference and usage guide for the PyToon Python library.
 
 ```bash
 # Add to existing project
-uv add py-toon
+uv add toon-llm
 
 # Or install in current environment
-uv pip install py-toon
+uv pip install toon-llm
 ```
 
 ### Using pip
 
 ```bash
-pip install py-toon
+pip install toon-llm
 ```
 
 ---
@@ -42,7 +42,7 @@ pip install py-toon
 ### Basic Encoding
 
 ```python
-from pytoon import encode
+from toon import encode
 
 # Primitives
 encode(None)           # → 'null'
@@ -63,7 +63,7 @@ encode([1, 2, 3])
 ### Basic Decoding
 
 ```python
-from pytoon import decode
+from toon import decode
 
 # Primitives
 decode('null')         # → None
@@ -84,7 +84,7 @@ decode('[3]: 1,2,3')
 ### Round-Trip Serialization
 
 ```python
-from pytoon import encode, decode
+from toon import encode, decode
 
 data = {
     "users": [
@@ -93,7 +93,7 @@ data = {
     ]
 }
 
-# Encode to PyToon format
+# Encode to TOON LLM format
 encoded = encode(data)
 print(encoded)
 # users[2]:
@@ -112,7 +112,7 @@ assert decoded == data
 
 ### `encode()`
 
-Main function to encode Python values to PyToon format.
+Main function to encode Python values to TOON LLM format.
 
 ```python
 def encode(
@@ -124,7 +124,7 @@ def encode(
     length_marker: Literal["#"] | Literal[False] = False,
 ) -> str:
     """
-    Encode a Python value to PyToon format.
+    Encode a Python value to TOON LLM format.
 
     Args:
         value: The value to encode (any JSON-serializable type)
@@ -134,7 +134,7 @@ def encode(
         length_marker: Use '#' prefix in array headers or False (default: False)
 
     Returns:
-        PyToon formatted string
+        TOON LLM formatted string
 
     Raises:
         EncodeError: If encoding fails
@@ -147,7 +147,7 @@ def encode(
 **Simple Values:**
 
 ```python
-from pytoon import encode
+from toon import encode
 
 # String quoting is automatic
 encode("hello world")           # → '"hello world"'  (has spaces)
@@ -239,7 +239,7 @@ encode({"a": {"b": 1}}, indent=4)
 #     b: 1
 
 # Combined options
-from pytoon import EncodeOptions
+from toon import EncodeOptions
 
 options = EncodeOptions(
     indent=4,
@@ -256,7 +256,7 @@ encode([1, 2, 3], options=options)
 
 ### `decode()`
 
-Main function to decode PyToon format strings to Python values.
+Main function to decode TOON LLM format strings to Python values.
 
 ```python
 def decode(
@@ -266,10 +266,10 @@ def decode(
     delimiter: str = ",",
 ) -> JsonValue:
     """
-    Decode a PyToon formatted string to Python value.
+    Decode a TOON LLM formatted string to Python value.
 
     Args:
-        text: The PyToon formatted string to decode
+        text: The TOON LLM formatted string to decode
         options: Pre-configured DecodeOptions (overrides keyword args)
         delimiter: Expected delimiter in arrays: ',', '\t', or '|' (default: ',')
 
@@ -287,7 +287,7 @@ def decode(
 **Simple Values:**
 
 ```python
-from pytoon import decode
+from toon import decode
 
 # Primitives
 decode('null')                  # → None
@@ -353,7 +353,7 @@ decode('''
 **Custom Options:**
 
 ```python
-from pytoon import DecodeOptions
+from toon import DecodeOptions
 
 # Custom delimiter
 decode('[3|]: 1|2|3', delimiter='|')
@@ -369,12 +369,12 @@ decode('[3\t]: 1\t2\t3', options=options)
 
 ## Type System
 
-PyToon uses a well-defined type system based on JSON types.
+TOON LLM uses a well-defined type system based on JSON types.
 
 ### Type Aliases
 
 ```python
-from pytoon import JsonPrimitive, JsonArray, JsonObject, JsonValue
+from toon import JsonPrimitive, JsonArray, JsonObject, JsonValue
 
 # Primitive types
 JsonPrimitive = str | int | float | bool | None
@@ -391,10 +391,10 @@ JsonValue = JsonPrimitive | JsonArray | JsonObject
 
 ### Type Guards
 
-PyToon provides type guards for runtime type checking:
+TOON LLM provides type guards for runtime type checking:
 
 ```python
-from pytoon.normalize import (
+from toon.normalize import (
     is_json_primitive,
     is_json_array,
     is_json_object,
@@ -424,7 +424,7 @@ if is_array_of_objects(data):
 Pydantic model for encoding configuration.
 
 ```python
-from pytoon import EncodeOptions
+from toon import EncodeOptions
 
 class EncodeOptions(BaseModel):
     """Configuration options for encoding."""
@@ -479,7 +479,7 @@ except ValidationError:
 Pydantic model for decoding configuration.
 
 ```python
-from pytoon import DecodeOptions
+from toon import DecodeOptions
 
 class DecodeOptions(BaseModel):
     """Configuration options for decoding."""
@@ -510,7 +510,7 @@ except ValidationError:
 Convenient enum for common delimiters.
 
 ```python
-from pytoon import Delimiters
+from toon import Delimiters
 
 # Available delimiters
 Delimiters.comma     # → ","
@@ -518,7 +518,7 @@ Delimiters.tab       # → "\t"
 Delimiters.pipe      # → "|"
 
 # Usage
-from pytoon import encode, Delimiters
+from toon import encode, Delimiters
 
 encode([1, 2, 3], delimiter=Delimiters.pipe)
 # [3|]: 1|2|3
@@ -533,7 +533,7 @@ encode([1, 2, 3], delimiter=Delimiters.pipe)
 Raised when encoding fails.
 
 ```python
-from pytoon import encode, EncodeError
+from toon import encode, EncodeError
 
 try:
     # This will work - non-serializable values become None
@@ -548,7 +548,7 @@ except EncodeError as e:
 Raised when decoding fails or format is invalid.
 
 ```python
-from pytoon import decode, DecodeError
+from toon import decode, DecodeError
 
 try:
     # Invalid array length
@@ -569,7 +569,7 @@ Pydantic validation errors for invalid options.
 
 ```python
 from pydantic import ValidationError
-from pytoon import EncodeOptions
+from toon import EncodeOptions
 
 try:
     EncodeOptions(indent=-1)
@@ -582,13 +582,13 @@ except ValidationError as e:
 
 ## Python-Specific Features
 
-PyToon automatically normalizes Python-specific types during encoding.
+TOON LLM automatically normalizes Python-specific types during encoding.
 
 ### Datetime Objects
 
 ```python
 from datetime import datetime
-from pytoon import encode
+from toon import encode
 
 now = datetime(2024, 1, 15, 10, 30, 0)
 encode(now)
@@ -605,7 +605,7 @@ encode(now_utc)
 
 ```python
 from dataclasses import dataclass
-from pytoon import encode
+from toon import encode
 
 @dataclass
 class User:
@@ -622,7 +622,7 @@ encode(user)
 
 ```python
 from pydantic import BaseModel
-from pytoon import encode
+from toon import encode
 
 class User(BaseModel):
     name: str
@@ -641,7 +641,7 @@ encode(user)
 Sets are converted to lists (order may vary).
 
 ```python
-from pytoon import encode
+from toon import encode
 
 data = {"tags": {1, 2, 3}}
 encode(data)
@@ -653,7 +653,7 @@ encode(data)
 Tuples are treated as lists.
 
 ```python
-from pytoon import encode
+from toon import encode
 
 encode((1, 2, 3))
 # [3]: 1,2,3
@@ -662,7 +662,7 @@ encode((1, 2, 3))
 ### Special Numbers
 
 ```python
-from pytoon import encode
+from toon import encode
 
 # Negative zero is canonicalized
 encode(-0.0)
@@ -678,7 +678,7 @@ encode(float('nan'))    # → 'null'
 Non-serializable objects are automatically converted to `None`.
 
 ```python
-from pytoon import encode
+from toon import encode
 
 class CustomClass:
     pass
@@ -699,7 +699,7 @@ encode({"obj": obj})
 ### Nested Structures
 
 ```python
-from pytoon import encode
+from toon import encode
 
 data = {
     "company": "TechCorp",
@@ -734,7 +734,7 @@ print(result)
 For more control over serialization, normalize data before encoding:
 
 ```python
-from pytoon import encode
+from toon import encode
 from datetime import datetime
 
 # Custom date formatting
@@ -754,10 +754,10 @@ result = encode(normalized)
 
 ### Array Format Selection
 
-PyToon automatically chooses the best array format:
+TOON LLM automatically chooses the best array format:
 
 ```python
-from pytoon import encode
+from toon import encode
 
 # Inline format: all primitives
 encode([1, 2, 3])
@@ -786,7 +786,7 @@ encode([
 ### Working with Files
 
 ```python
-from pytoon import encode, decode
+from toon import encode, decode
 from pathlib import Path
 
 # Save to file
@@ -801,7 +801,7 @@ assert loaded == data
 ### Pretty Printing
 
 ```python
-from pytoon import encode
+from toon import encode
 
 data = {"deeply": {"nested": {"data": [1, 2, 3]}}}
 
@@ -866,7 +866,7 @@ encode([1, 2, 3], delimiter="\t")  # [3	]: 1	2	3
 3. **Pre-normalize complex objects**: If you have custom serialization logic
 
 ```python
-# Slower: let PyToon normalize
+# Slower: let TOON LLM normalize
 encode(complex_object)
 
 # Faster: pre-normalize
@@ -881,17 +881,17 @@ encode(normalized)
 ### 1. Use Type Hints
 
 ```python
-from pytoon import encode, JsonObject
+from toon import encode, JsonObject
 
 def save_config(config: JsonObject) -> str:
-    """Save configuration to PyToon format."""
+    """Save configuration to TOON LLM format."""
     return encode(config)
 ```
 
 ### 2. Handle Errors Gracefully
 
 ```python
-from pytoon import decode, DecodeError
+from toon import decode, DecodeError
 
 def load_config(text: str) -> dict:
     """Load configuration, return empty dict on error."""
@@ -905,7 +905,7 @@ def load_config(text: str) -> dict:
 ### 3. Use Options Objects for Consistency
 
 ```python
-from pytoon import encode, EncodeOptions
+from toon import encode, EncodeOptions
 
 # Define once, reuse everywhere
 APP_ENCODE_OPTIONS = EncodeOptions(
@@ -921,7 +921,7 @@ def save_data(data):
 ### 4. Validate Before Encoding
 
 ```python
-from pytoon import encode
+from toon import encode
 from pydantic import BaseModel
 
 class Config(BaseModel):
@@ -940,7 +940,7 @@ encoded = encode(config)
 ```python
 def parse_user_data(text: str) -> dict:
     """
-    Parse user data from PyToon format.
+    Parse user data from TOON LLM format.
 
     Expected format:
         name: Alice
@@ -948,12 +948,12 @@ def parse_user_data(text: str) -> dict:
         tags[2]: python,coding
 
     Args:
-        text: PyToon formatted user data
+        text: TOON LLM formatted user data
 
     Returns:
         Parsed user dictionary
     """
-    from pytoon import decode
+    from toon import decode
     return decode(text)
 ```
 
@@ -961,13 +961,13 @@ def parse_user_data(text: str) -> dict:
 
 ## See Also
 
-- [Format Specification](../specification/README.md) - Complete PyToon format specification
+- [Format Specification](../specification/README.md) - Complete TOON LLM format specification
 - [Coding Standards](./CODING_STANDARDS.md) - For contributors
 - [Build Instructions](./BUILD.md) - How to build and distribute the library
-- [GitHub Repository](https://github.com/davidpirogov/py-toon) - Source code and issues
+- [GitHub Repository](https://github.com/davidpirogov/toon-llm) - Source code and issues
 
 ---
 
 ## License
 
-This implementation is part of the PyToon project. See the [LICENSE](../LICENSE) file for details.
+This implementation is part of the TOON LLM project. See the [LICENSE](../LICENSE) file for details.

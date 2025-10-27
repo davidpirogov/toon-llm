@@ -18,7 +18,7 @@ from datetime import datetime, timezone
 from dataclasses import dataclass
 from typing import Any
 
-from pytoon import encode
+from toon import encode
 # Sample data utilities available if needed
 
 

@@ -1,4 +1,4 @@
-# PyToon
+# Token-Oriented Object Notation (TOON) for LLMs
 
 Token-Oriented Object Notation (TOON) is an LLM-optimized data serialization format implemented in Python.
 
@@ -24,18 +24,18 @@ Get more cognitive output and efficiency from LLMs with less tokens in prompts!
 
 ```bash
 # Using uv (recommended)
-uv add py-toon
+uv add toon-llm
 
 # Using pip
-pip install py-toon
+pip install toon-llm
 ```
 
 ### Basic Usage
 
 ````python
-from pytoon import encode, decode
+from TOON LLM import encode, decode
 
-# Encode Python data to PyToon format
+# Encode Python data to TOON LLM format
 data = {
     "username": "Alice",
     "age": 30,
@@ -75,7 +75,7 @@ Process the following structured data and return the invoices that have not been
 
 ### CLI Usage
 
-PyToon includes a command-line interface for encoding and decoding data:
+TOON LLM includes a command-line interface for encoding and decoding data:
 
 ```bash
 # Show help
@@ -113,17 +113,17 @@ See `uv run toon encode --help` and `uv run toon decode --help` for all availabl
 - **[LLM Prompts](./docs/LLM_PROMPTS.md)** - Guidance for LLMs to understand and generate TOON format
 - **[Coding Standards](./docs/CODING_STANDARDS.md)** - For contributors
 
-## 🎨 Why PyToon?
+## 🎨 Why TOON LLM?
 
-PyToon is a Python library that provides a clean, compact, and highly readable alternative to JSON for serializing Python data structures to minimise token usage with large language models (LLMs).
+TOON LLM is a Python library that provides a clean, compact, and highly readable alternative to JSON for serializing Python data structures to minimise token usage with large language models (LLMs).
 
 It is a Python compatible specification and implementation of [Token-Oriented Object Notation](https://github.com/johannschopplich/toon) format.
 
-Cognitive load in LLMs can be significantly reduced by using more concise and structured data formats. PyToon achieves this by minimizing syntax noise and enhancing readability, making it easier for both humans and machines to parse and understand the data.
+Cognitive load in LLMs can be significantly reduced by using more concise and structured data formats. TOON LLM achieves this by minimizing syntax noise and enhancing readability, making it easier for both humans and machines to parse and understand the data.
 
 ### Compare with JSON
 
-Using the `cl100k_base` tokenizer from OpenAI, here is a comparison of how the same data is represented in JSON vs PyToon.
+Using the `cl100k_base` tokenizer from OpenAI, here is a comparison of how the same data is represented in JSON vs TOON LLM.
 
 **JSON:**
 
@@ -146,7 +146,7 @@ Using the `cl100k_base` tokenizer from OpenAI, here is a comparison of how the s
 
 Token Count: **`411`**
 
-**PyToon:**
+**TOON LLM:**
 
 ```toon
 weather_observations[10]:
@@ -179,7 +179,7 @@ Multiply that over large datasets and complex structures, and the savings become
 
 ### 🛠️ Configuration
 
-PyToon provides flexible configuration options to customize the encoding format.
+TOON LLM provides flexible configuration options to customize the encoding format.
 
 Read about them in the [Specification](./specification/README.md#configuration-options) and the [API Documentation](./docs/IMPLEMENTATION.md#configuration-options).
 
@@ -205,8 +205,8 @@ Contributions are welcome! Please read our [Coding Standards](./docs/CODING_STAN
 
 ```bash
 # Clone repository
-git clone https://github.com/davidpirogov/py-toon.git
-cd py-toon
+git clone https://github.com/davidpirogov/toon-llm.git
+cd toon-llm
 
 # Install dependencies
 uv sync
@@ -215,10 +215,10 @@ uv sync
 uv run pytest
 
 # Run linting
-uv run ruff check pytoon/
+uv run ruff check TOON LLM/
 
 # Format code
-uv run ruff format pytoon/
+uv run ruff format TOON LLM/
 ```
 
 ### Development Guidelines
@@ -246,7 +246,7 @@ If you are looking for a TypeScript/JavaScript implementation, check out [toon r
 
 ## 🔗 Links
 
-- **GitHub**: [https://github.com/davidpirogov/py-toon](https://github.com/davidpirogov/py-toon)
+- **GitHub**: [https://github.com/davidpirogov/toon-llm](https://github.com/davidpirogov/toon-llm)
 - **Documentation**: [./docs/](./docs/)
-- **Issues**: [GitHub Issues](https://github.com/davidpirogov/py-toon/issues)
-- **PyPI**: [https://pypi.org/project/py-toon/](https://pypi.org/project/py-toon/)
+- **Issues**: [GitHub Issues](https://github.com/davidpirogov/toon-llm/issues)
+- **PyPI**: [https://pypi.org/project/toon-llm/](https://pypi.org/project/toon-llm/)

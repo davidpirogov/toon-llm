@@ -1,5 +1,5 @@
 """
-Type definitions and data models for PyToon encoding.
+Type definitions and data models for TOON LLM encoding.
 
 This module provides type aliases for JSON-like data structures and Pydantic models
 for configuration options with validation.
@@ -9,7 +9,7 @@ from typing import Literal, Union
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from pytoon.constants import Delimiters
+from toon.constants import Delimiters
 
 JsonPrimitive = Union[str, int, float, bool, None]
 """A JSON primitive value: string, number, boolean, or null."""
@@ -29,7 +29,7 @@ Depth = int
 
 class EncodeOptions(BaseModel):
     """
-    Configuration options for PyToon encoding.
+    Configuration options for TOON LLM encoding.
 
     All fields are optional and have sensible defaults. The model is frozen
     after creation to prevent accidental modifications.
@@ -113,7 +113,7 @@ class ResolvedEncodeOptions(BaseModel):
 
 class DecodeOptions(BaseModel):
     r"""
-    Configuration options for PyToon decoding.
+    Configuration options for TOON LLM decoding.
 
     All fields are optional and have sensible defaults. The model is frozen
     after creation to prevent accidental modifications.

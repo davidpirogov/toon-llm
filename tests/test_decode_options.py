@@ -3,8 +3,8 @@
 import pytest
 from pydantic import ValidationError
 
-from pytoon import DecodeOptions, ResolvedDecodeOptions
-from pytoon.constants import Delimiters
+from toon import DecodeOptions, ResolvedDecodeOptions
+from toon.constants import Delimiters
 
 
 class TestDecodeOptions:

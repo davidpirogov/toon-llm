@@ -2,8 +2,8 @@
 
 import pytest
 
-from pytoon import decode
-from pytoon.errors import DecodeError
+from toon import decode
+from toon.errors import DecodeError
 
 
 class TestDecodeBasics:

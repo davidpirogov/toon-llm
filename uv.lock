@@ -239,7 +239,7 @@ wheels = [
 ]
 
 [[package]]
-name = "py-toon"
+name = "toon-llm"
 version = "1.0.0b1"
 source = { editable = "." }
 dependencies = [

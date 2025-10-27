@@ -8,8 +8,8 @@ different delimiters, length markers, and array formats.
 
 import re
 
-from pytoon.errors import DecodeError
-from pytoon.types import (
+from toon.errors import DecodeError
+from toon.types import (
     JsonArray,
     JsonObject,
     JsonPrimitive,

@@ -1,6 +1,6 @@
 # Coding Standards
 
-This document defines the coding standards for the PyToon project, emphasizing Python 3.11 best practices and Pydantic for data validation.
+This document defines the coding standards for the TOON LLM project, emphasizing Python 3.11 best practices and Pydantic for data validation.
 
 ## Table of Contents
 
@@ -401,8 +401,8 @@ from typing import Any, TypeGuard
 
 from pydantic import BaseModel, Field
 
-from pytoon.types import JsonValue
-from pytoon.constants import COMMA
+from toon.types import JsonValue
+from toon.constants import COMMA
 ```
 
 ### Exports
@@ -595,7 +595,7 @@ def test_with_config(sample_config):
 
 ## Summary
 
-This document establishes the coding standards for PyToon. Key principles:
+This document establishes the coding standards for TOON LLM. Key principles:
 
 1. **Type Safety**: Use Python 3.11 type hints everywhere
 2. **Validation**: Use Pydantic for configuration and data validation

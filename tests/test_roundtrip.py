@@ -1,6 +1,6 @@
 """Integration tests for encode/decode round-trip functionality."""
 
-from pytoon import decode, encode
+from toon import decode, encode
 
 
 class TestRoundTripBasics:

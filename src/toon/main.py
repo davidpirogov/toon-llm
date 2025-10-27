@@ -1,8 +1,8 @@
 """
-Command-line interface for PyToon encoding and decoding.
+Command-line interface for TOON LLM encoding and decoding.
 
-This module provides a CLI for encoding JSON to PyToon format and decoding
-PyToon format back to JSON. It supports standard Unix behaviors like reading
+This module provides a CLI for encoding JSON to TOON LLM format and decoding
+TOON LLM format back to JSON. It supports standard Unix behaviors like reading
 from stdin and writing to stdout.
 """
 
@@ -15,13 +15,13 @@ from typing import Annotated, Optional
 import typer
 from typing_extensions import Literal
 
-from pytoon import __version__, decode, encode
-from pytoon.errors import DecodeError, EncodeError
+from toon import __version__, decode, encode
+from toon.errors import DecodeError, EncodeError
 
 # Create the main Typer app
 app = typer.Typer(
     name="pytoon",
-    help="PyToon: Token-Oriented Object Notation for LLMs",
+    help="TOON LLM: Token-Oriented Object Notation for LLMs",
     add_completion=False,
 )
 
@@ -47,7 +47,7 @@ def main(
     ] = None,
 ) -> None:
     """
-    PyToon CLI: Encode JSON to PyToon format or decode PyToon to JSON.
+    TOON LLM CLI: Encode JSON to TOON LLM format or decode TOON LLM to JSON.
 
     Use 'pytoon encode' or 'pytoon decode' subcommands.
     """
@@ -119,7 +119,7 @@ def encode_cmd(
                 typer.echo(traceback.format_exc(), err=True)
             raise typer.Exit(code=1) from None
 
-        # Encode to PyToon
+        # Encode to TOON LLM
         try:
             length_marker_value: Literal["#", False] = "#" if length_marker else False
             result = encode(
@@ -158,7 +158,7 @@ def decode_cmd(
     input_file: Annotated[
         Optional[Path],
         typer.Argument(
-            help="Input PyToon file (or '-' for stdin). If not specified, reads from stdin.",
+            help="Input TOON LLM file (or '-' for stdin). If not specified, reads from stdin.",
             show_default=False,
         ),
     ] = None,
@@ -170,7 +170,7 @@ def decode_cmd(
     ] = None,
     delimiter: Annotated[
         str,
-        typer.Option("--delimiter", "-d", help="Delimiter used in the PyToon format"),
+        typer.Option("--delimiter", "-d", help="Delimiter used in the TOON LLM format"),
     ] = ",",
     pretty: Annotated[
         bool,
@@ -181,7 +181,7 @@ def decode_cmd(
     validate: Annotated[
         bool,
         typer.Option(
-            "--validate", help="Only validate PyToon format without outputting"
+            "--validate", help="Only validate TOON LLM format without outputting"
         ),
     ] = False,
     verbose: Annotated[
@@ -212,7 +212,7 @@ def decode_cmd(
                 raise typer.Exit(code=1)
             input_text = input_file.read_text(encoding="utf-8")
 
-        # Decode from PyToon
+        # Decode from TOON LLM
         try:
             result = decode(input_text, delimiter=delimiter)
         except DecodeError as e:
@@ -224,7 +224,7 @@ def decode_cmd(
         # If validate-only mode, just report success
         if validate:
             if verbose:
-                typer.echo("✓ PyToon format is valid", err=True)
+                typer.echo("✓ TOON LLM format is valid", err=True)
             else:
                 typer.echo("Valid")
             return

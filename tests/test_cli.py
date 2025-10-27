@@ -1,5 +1,5 @@
 """
-Comprehensive test suite for the PyToon CLI using Typer's CliRunner.
+Comprehensive test suite for the TOON LLM CLI using Typer's CliRunner.
 
 Tests cover all code paths including:
 - Encode command with various options
@@ -17,8 +17,8 @@ import json
 import pytest
 from typer.testing import CliRunner
 
-from pytoon import __version__
-from pytoon.main import app
+from toon import __version__
+from toon.main import app
 
 # Create a CliRunner instance
 runner = CliRunner()
@@ -43,7 +43,7 @@ class TestCLIVersion:
         """Test --help flag displays help."""
         result = runner.invoke(app, ["--help"])
         assert result.exit_code == 0
-        assert "PyToon: Token-Oriented Object Notation for LLMs" in result.stdout
+        assert "TOON LLM: Token-Oriented Object Notation for LLMs" in result.stdout
         assert "encode" in result.stdout
         assert "decode" in result.stdout
 
@@ -289,7 +289,7 @@ class TestCLIDecodeFromFile:
         )
 
         assert result.exit_code == 0
-        assert "✓ PyToon format is valid" in result.stderr
+        assert "✓ TOON LLM format is valid" in result.stderr
 
     def test_decode_array(self, tmp_path):
         """Test decoding an array."""

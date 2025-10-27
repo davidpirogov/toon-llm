@@ -15,7 +15,7 @@ Tests follow the coding standards defined in docs/CODING_STANDARDS.md:
 
 import pytest
 
-from pytoon import encode
+from toon import encode
 from tests.sample_data import get_sample
 
 

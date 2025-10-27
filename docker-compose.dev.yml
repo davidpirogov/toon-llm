@@ -1,5 +1,5 @@
 services:
-    py-toon-dev:
+    toon-llm-dev:
         build:
             context: .
             dockerfile: .devcontainer/Dockerfile.dev

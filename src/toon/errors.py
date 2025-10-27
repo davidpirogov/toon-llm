@@ -1,4 +1,4 @@
-"""This module defines custom exceptions for the PyToon library."""
+"""This module defines custom exceptions for the TOON LLM library."""
 
 
 class EncodeError(ValueError):

@@ -1,6 +1,6 @@
-# PyToon Documentation
+# TOON LLM Documentation
 
-Welcome to the PyToon documentation. PyToon is a Python library for encoding and decoding Python data structures in a compact, human-readable text format.
+Welcome to the TOON LLM documentation. TOON LLM is a Python library for encoding and decoding Python data structures in a compact, human-readable text format.
 
 ## Documentation Files
 
@@ -49,25 +49,25 @@ Welcome to the PyToon documentation. PyToon is a Python library for encoding and
 
 ```bash
 # Using uv (recommended)
-uv add py-toon
+uv add toon-llm
 
 # Using pip
-pip install py-toon
+pip install toon-llm
 ```
 
 ### Basic Usage
 
 ```python
-from pytoon import encode, decode
+from toon import encode, decode
 
-# Encode: Python → PyToon
+# Encode: Python → TOON LLM
 data = {'name': 'Ada', 'age': 42}
 encoded = encode(data)
 print(encoded)
 # name: Ada
 # age: 42
 
-# Decode: PyToon → Python
+# Decode: TOON LLM → Python
 decoded = decode(encoded)
 print(decoded)
 # {'name': 'Ada', 'age': 42'}
@@ -110,7 +110,7 @@ encode({
 ### Configuration Options
 
 ```python
-from pytoon import encode, EncodeOptions, Delimiters
+from toon import encode, EncodeOptions, Delimiters
 
 # Custom delimiter
 encode([1, 2, 3], delimiter='|')
@@ -140,7 +140,7 @@ encode([1, 2], options=options)
 
 ### Python-Specific Features
 
-PyToon automatically handles Python types:
+TOON LLM automatically handles Python types:
 
 ```python
 from datetime import datetime
@@ -182,7 +182,7 @@ encode((1, 2, 3))
 ### For Users
 
 - **[IMPLEMENTATION.md](./IMPLEMENTATION.md)** - Complete API documentation and usage guide
-- **[../specification/README.md](../specification/README.md)** - PyToon format specification
+- **[../specification/README.md](../specification/README.md)** - TOON LLM format specification
 - **[../README.md](../README.md)** - Project overview and quick start
 
 ### For Contributors
@@ -194,8 +194,8 @@ encode((1, 2, 3))
 
 ## Support
 
-- **Issues**: [GitHub Issues](https://github.com/davidpirogov/py-toon/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/davidpirogov/py-toon/discussions)
+- **Issues**: [GitHub Issues](https://github.com/davidpirogov/toon-llm/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/davidpirogov/toon-llm/discussions)
 
 ## License
 

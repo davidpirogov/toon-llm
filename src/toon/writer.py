@@ -5,7 +5,7 @@ This module provides the LineWriter class for accumulating lines of text
 with automatic indentation management.
 """
 
-from pytoon.types import Depth
+from toon.types import Depth
 
 
 class LineWriter:

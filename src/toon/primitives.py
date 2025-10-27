@@ -10,7 +10,7 @@ import math
 import re
 from typing import Literal, Optional, Sequence, Union
 
-from pytoon.constants import (
+from toon.constants import (
     BACKSLASH,
     COMMA,
     DEFAULT_DELIMITER,
@@ -20,7 +20,7 @@ from pytoon.constants import (
     NULL_LITERAL,
     TRUE_LITERAL,
 )
-from pytoon.types import JsonPrimitive
+from toon.types import JsonPrimitive
 
 
 def encode_primitive(value: JsonPrimitive, delimiter: str = COMMA) -> str:

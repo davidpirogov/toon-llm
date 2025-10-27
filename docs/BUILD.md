@@ -1,6 +1,6 @@
 # Build
 
-Building py-toon can be done with python:
+Building toon-llm can be done with python:
 
 ```bash
 uv run pytest tests/

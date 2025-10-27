@@ -1,7 +1,7 @@
 """
-Test suite for PyToon encoding functionality.
+Test suite for TOON LLM encoding functionality.
 
-This package contains comprehensive tests for the PyToon encoder, covering:
+This package contains comprehensive tests for the TOON LLM encoder, covering:
 - Valid simple and complex encoding scenarios
 - Invalid format detection and error handling
 - Edge cases and boundary conditions
