@@ -870,7 +870,7 @@ Version 1.0 will be the first stable version of the specification. This specific
     - Tab delimiter: `{'items': ['a', 'b\tc', 'd']}` with `delimiter='\t'` → `'items[3\t]: a\t"b\\tc"\td'`
     - Pipe delimiter: `{'items': ['a', 'b|c', 'd']}` with `delimiter='|'` → `'items[3|]: a|"b|c"|d'`
 - **Clarifications**:
-    - Tabs (and other whitespace) used as delimiters should NOT be escaped when they appear in quoted strings
+    - Tabs, and other whitespace or control characters, used as delimiters should NOT be escaped when they appear in quoted strings, unless they would break the TOON format structure (newlines, carriage returns, backslashes, quotes).
 
 #### Delimiter Independence for Commas
 
