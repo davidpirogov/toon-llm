@@ -33,7 +33,7 @@ pip install toon-llm
 ### Basic Usage
 
 ````python
-from TOON LLM import encode, decode
+from toon import encode, decode
 
 # Encode Python data to TOON LLM format
 data = {
