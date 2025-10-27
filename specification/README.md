@@ -1060,7 +1060,8 @@ Version 1.0 will be the first stable version of the specification. This specific
 ### Indentation
 
 - **Rule**: Default indentation is 2 spaces per level
-- **Rule**: Any indentation level (2 spaces, 4 spaces, tabs, etc.) may be used, but it must be consistent throughout the entire document
+- **Rule**: Minimum indentation is 1 space per level (indent=0 is not supported)
+- **Rule**: Any indentation level (1 space, 2 spaces, 4 spaces, tabs, etc.) may be used, but it must be consistent throughout the entire document
 - **Rule**: List items use one indentation level plus "- " for first line
 - **Rule**: Subsequent fields in list items align with first field (base indent + 2 additional spaces when using 2-space indent, or base indent + indent width for other levels)
 
