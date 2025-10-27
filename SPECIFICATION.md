@@ -1,12 +1,12 @@
-# PyToon Specification
+# Token-Oriented Object Notation Specification
 
 ## Overview
 
-PyToon is a Python library for encoding Python data structures into a compact, human-readable text format. This specification defines the encoding rules and behavior.
+This specification defines the format for Token-Oriented Object Notation (TOON)
 
 ## Table of Contents
 
-1. [Core Function](#core-function)
+1. [Specification Version](#specification-version)
 2. [Primitive Types](#primitive-types)
 3. [Objects (Dictionaries)](#objects-dictionaries)
 4. [Arrays (Lists)](#arrays-lists)
@@ -16,26 +16,11 @@ PyToon is a Python library for encoding Python data structures into a compact, h
 
 ---
 
-## Core Function
+## Specification Version
 
-### Function Signature
+This specification is version is `0.9-beta1`.
 
-```python
-def encode(data: Any, *, delimiter: str = ',', length_marker: str = '') -> str:
-    """
-    Encode Python data structures into a compact text format.
-
-    Args:
-        data: Any Python object to encode
-        delimiter: Character(s) used to separate array elements (default: ',')
-        length_marker: Optional prefix for array length indicators (default: '')
-
-    Returns:
-        A string representation of the data
-    """
-```
-
----
+Version 1.0 will be the first stable version of the specification. This specification can change until 1.0.
 
 ## Primitive Types
 
@@ -118,7 +103,6 @@ def encode(data: Any, *, delimiter: str = ',', length_marker: str = '') -> str:
     - `1e6` → `'1000000'` (scientific notation expanded)
     - `1e-6` → `'0.000001'`
     - `1e20` → `'100000000000000000000'`
-    - `Number.MAX_SAFE_INTEGER` → `'9007199254740991'`
 
 #### Non-Finite Numbers
 
@@ -148,14 +132,14 @@ def encode(data: Any, *, delimiter: str = ',', length_marker: str = '') -> str:
 
 #### Basic Key-Value Pairs
 
-- **Rule**: Keys and values separated by `: `, entries separated by newlines
+- **Rule**: Keys and values separated by ": ", entries separated by newlines
 - **Rule**: Key order is preserved
 - **Example**:
     ```python
     {'id': 123, 'name': 'Ada', 'active': True}
     ```
     →
-    ```
+    ```text
     id: 123
     name: Ada
     active: true
@@ -174,7 +158,7 @@ def encode(data: Any, *, delimiter: str = ',', length_marker: str = '') -> str:
     {'id': 123, 'value': None}
     ```
     →
-    ```
+    ```text
     id: 123
     value: null
     ```
@@ -241,7 +225,7 @@ def encode(data: Any, *, delimiter: str = ',', length_marker: str = '') -> str:
     {'a': {'b': {'c': 'deep'}}}
     ```
     →
-    ```
+    ```text
     a:
       b:
         c: deep
@@ -307,7 +291,7 @@ def encode(data: Any, *, delimiter: str = ',', length_marker: str = '') -> str:
     }
     ```
     →
-    ```
+    ```text
     items[2]{sku,qty,price}:
       A1,2,9.99
       B2,1,14.5
@@ -326,7 +310,7 @@ def encode(data: Any, *, delimiter: str = ',', length_marker: str = '') -> str:
     }
     ```
     →
-    ```
+    ```text
     items[2]{id,value}:
       1,null
       2,test
@@ -345,7 +329,7 @@ def encode(data: Any, *, delimiter: str = ',', length_marker: str = '') -> str:
     }
     ```
     →
-    ```
+    ```text
     items[2]{sku,desc,qty}:
       "A,1",cool,2
       B2,"wip: test",1
@@ -364,7 +348,7 @@ def encode(data: Any, *, delimiter: str = ',', length_marker: str = '') -> str:
     }
     ```
     →
-    ```
+    ```text
     items[2]{"order:id","full name"}:
       1,Ada
       2,Bob
@@ -383,7 +367,7 @@ def encode(data: Any, *, delimiter: str = ',', length_marker: str = '') -> str:
     }
     ```
     →
-    ```
+    ```text
     items[2]{a,b,c}:
       1,2,3
       10,20,30
@@ -391,7 +375,7 @@ def encode(data: Any, *, delimiter: str = ',', length_marker: str = '') -> str:
 
 #### List Format (Different Keys)
 
-- **Rule**: Arrays of objects with different keys use list format with `- ` prefix
+- **Rule**: Arrays of objects with different keys use list format with "- " prefix
 - **Example**:
     ```python
     {
@@ -402,7 +386,7 @@ def encode(data: Any, *, delimiter: str = ',', length_marker: str = '') -> str:
     }
     ```
     →
-    ```
+    ```text
     items[2]:
       - id: 1
         name: First
@@ -423,7 +407,7 @@ def encode(data: Any, *, delimiter: str = ',', length_marker: str = '') -> str:
     }
     ```
     →
-    ```
+    ```text
     items[1]:
       - id: 1
         nested:
@@ -443,7 +427,7 @@ def encode(data: Any, *, delimiter: str = ',', length_marker: str = '') -> str:
     }
     ```
     →
-    ```
+    ```text
     items[2]:
       - id: 1
         data: string
@@ -463,7 +447,7 @@ def encode(data: Any, *, delimiter: str = ',', length_marker: str = '') -> str:
 
     →
 
-    ```
+    ```text
     items[1]:
       - nums[3]: 1,2,3
         name: test
@@ -475,7 +459,7 @@ def encode(data: Any, *, delimiter: str = ',', length_marker: str = '') -> str:
 
     →
 
-    ```
+    ```text
     items[1]:
       - name: test
         nums[3]: 1,2,3
@@ -493,7 +477,7 @@ def encode(data: Any, *, delimiter: str = ',', length_marker: str = '') -> str:
     }
     ```
     →
-    ```
+    ```text
     items[1]:
       - matrix[2]:
         - [2]: 1,2
@@ -516,7 +500,7 @@ def encode(data: Any, *, delimiter: str = ',', length_marker: str = '') -> str:
     }
     ```
     →
-    ```
+    ```text
     items[1]:
       - users[2]{id,name}:
         1,Ada
@@ -539,7 +523,7 @@ def encode(data: Any, *, delimiter: str = ',', length_marker: str = '') -> str:
     }
     ```
     →
-    ```
+    ```text
     items[1]:
       - users[2]:
         - id: 1
@@ -560,7 +544,7 @@ def encode(data: Any, *, delimiter: str = ',', length_marker: str = '') -> str:
     }
     ```
     →
-    ```
+    ```text
     items[1]:
       - nums[2]: 1,2
         tags[2]: a,b
@@ -579,7 +563,7 @@ def encode(data: Any, *, delimiter: str = ',', length_marker: str = '') -> str:
     }
     ```
     →
-    ```
+    ```text
     items[1]:
       - name: test
         data[0]:
@@ -597,7 +581,7 @@ def encode(data: Any, *, delimiter: str = ',', length_marker: str = '') -> str:
     }
     ```
     →
-    ```
+    ```text
     items[1]:
       - users[2]{id}:
         1
@@ -613,7 +597,7 @@ def encode(data: Any, *, delimiter: str = ',', length_marker: str = '') -> str:
     {'items': [{'data': [], 'name': 'x'}]}
     ```
     →
-    ```
+    ```text
     items[1]:
       - data[0]:
         name: x
@@ -631,7 +615,7 @@ def encode(data: Any, *, delimiter: str = ',', length_marker: str = '') -> str:
     }
     ```
     →
-    ```
+    ```text
     pairs[2]:
       - [2]: a,b
       - [2]: c,d
@@ -647,7 +631,7 @@ def encode(data: Any, *, delimiter: str = ',', length_marker: str = '') -> str:
     }
     ```
     →
-    ```
+    ```text
     pairs[2]:
       - [2]: a,b
       - [3]: "c,d","e:f","true"
@@ -661,7 +645,7 @@ def encode(data: Any, *, delimiter: str = ',', length_marker: str = '') -> str:
     {'pairs': [[], []]}
     ```
     →
-    ```
+    ```text
     pairs[2]:
       - [0]:
       - [0]:
@@ -675,7 +659,7 @@ def encode(data: Any, *, delimiter: str = ',', length_marker: str = '') -> str:
     {'pairs': [[1], [2, 3]]}
     ```
     →
-    ```
+    ```text
     pairs[2]:
       - [1]: 1
       - [2]: 2,3
@@ -691,7 +675,7 @@ def encode(data: Any, *, delimiter: str = ',', length_marker: str = '') -> str:
     ['x', 'y', 'true', True, 10]
     ```
     →
-    ```
+    ```text
     [5]: x,y,"true",true,10
     ```
 
@@ -703,7 +687,7 @@ def encode(data: Any, *, delimiter: str = ',', length_marker: str = '') -> str:
     [{'id': 1}, {'id': 2}]
     ```
     →
-    ```
+    ```text
     [2]{id}:
       1
       2
@@ -717,7 +701,7 @@ def encode(data: Any, *, delimiter: str = ',', length_marker: str = '') -> str:
     [{'id': 1}, {'id': 2, 'name': 'Ada'}]
     ```
     →
-    ```
+    ```text
     [2]:
       - id: 1
       - id: 2
@@ -737,7 +721,7 @@ def encode(data: Any, *, delimiter: str = ',', length_marker: str = '') -> str:
     [[1, 2], []]
     ```
     →
-    ```
+    ```text
     [2]:
       - [2]: 1,2
       - [0]:
@@ -755,7 +739,7 @@ def encode(data: Any, *, delimiter: str = ',', length_marker: str = '') -> str:
     }
     ```
     →
-    ```
+    ```text
     items[3]:
       - 1
       - a: 1
@@ -772,7 +756,7 @@ def encode(data: Any, *, delimiter: str = ',', length_marker: str = '') -> str:
     }
     ```
     →
-    ```
+    ```text
     items[2]:
       - a: 1
       - [2]: 1,2
@@ -798,7 +782,7 @@ def encode(data: Any, *, delimiter: str = ',', length_marker: str = '') -> str:
     }
     ```
     →
-    ```
+    ```text
     user:
       id: 123
       name: Ada
@@ -813,13 +797,13 @@ def encode(data: Any, *, delimiter: str = ',', length_marker: str = '') -> str:
 
 ### Delimiter Option
 
-#### Purpose
+#### Configuration Delimiter Purpose
 
 - **Rule**: Allows customization of the array separator character
 - **Default**: `','` (comma)
 - **Supported Values**: `','`, `'|'`, `'\t'` (tab), or custom strings
 
-#### Primitive Arrays
+#### Configuration Delimiter Primitive Arrays
 
 - **Rule**: Delimiter is used between array elements
 - **Rule**: Delimiter appears in length marker if not comma
@@ -828,7 +812,7 @@ def encode(data: Any, *, delimiter: str = ',', length_marker: str = '') -> str:
     - Pipe: `{'tags': ['reading', 'gaming', 'coding']}` with `delimiter='|'` → `'tags[3|]: reading|gaming|coding'`
     - Comma (default): `{'tags': ['reading', 'gaming', 'coding']}` → `'tags[3]: reading,gaming,coding'`
 
-#### Tabular Arrays
+#### Configuration Delimiter Tabular Arrays
 
 - **Rule**: Delimiter separates header fields and row values
 - **Examples**:
@@ -842,36 +826,36 @@ def encode(data: Any, *, delimiter: str = ',', length_marker: str = '') -> str:
         }
         ```
         with `delimiter='\t'` →
-        ```
+        ```text
         items[2	]{sku	qty	price}:
           A1	2	9.99
           B2	1	14.5
         ```
     - Pipe:
-        ```
+        ```text
         items[2|]{sku|qty|price}:
           A1|2|9.99
           B2|1|14.5
         ```
 
-#### Nested Arrays
+#### Configuration Delimiter Nested Arrays
 
 - **Rule**: Delimiter is used consistently throughout nested structures
 - **Examples**:
     - Tab: `{'pairs': [['a', 'b'], ['c', 'd']]}` with `delimiter='\t'` →
-        ```
+        ```text
         pairs[2	]:
           - [2	]: a	b
           - [2	]: c	d
         ```
     - Pipe: →
-        ```
+        ```text
         pairs[2|]:
           - [2|]: a|b
           - [2|]: c|d
         ```
 
-#### Root Arrays
+#### Configuration Delimiter Root Arrays
 
 - **Rule**: Delimiter applies to root-level arrays
 - **Examples**:
@@ -904,6 +888,7 @@ def encode(data: Any, *, delimiter: str = ',', length_marker: str = '') -> str:
 
 - **Rule**: Tabular cell values containing delimiter must be quoted
 - **Example**:
+
     ```python
     {
       'items': [
@@ -914,13 +899,13 @@ def encode(data: Any, *, delimiter: str = ',', length_marker: str = '') -> str:
     ```
 
     - Comma: →
-        ```
+        ```text
         items[2]{id,note}:
           1,"a,b"
           2,"c,d"
         ```
     - Tab with `delimiter='\t'`: →
-        ```
+        ```text
         items[2	]{id	note}:
           1	a,b
           2	c,d
@@ -941,7 +926,7 @@ def encode(data: Any, *, delimiter: str = ',', length_marker: str = '') -> str:
     {'items': [{'a|b': 1}, {'a|b': 2}]}
     ```
     with `delimiter='|'` →
-    ```
+    ```text
     items[2|]{"a|b"}:
       1
       2
@@ -956,23 +941,23 @@ def encode(data: Any, *, delimiter: str = ',', length_marker: str = '') -> str:
 
 ### Length Marker Option
 
-#### Purpose
+#### Length Marker Purpose
 
 - **Rule**: Adds an optional prefix character to array length indicators
 - **Default**: `''` (no prefix)
 - **Common Value**: `'#'`
 
-#### Primitive Arrays
+#### Length Marker Primitive Arrays
 
 - **Rule**: Marker prefixes the length number
 - **Example**: `{'tags': ['reading', 'gaming', 'coding']}` with `length_marker='#'` → `'tags[#3]: reading,gaming,coding'`
 
-#### Empty Arrays
+#### Length Marker Empty Arrays
 
 - **Rule**: Marker applies to empty arrays
 - **Example**: `{'items': []}` with `length_marker='#'` → `'items[#0]:'`
 
-#### Tabular Arrays
+#### Length Marker Tabular Arrays
 
 - **Rule**: Marker prefixes length in tabular headers
 - **Example**:
@@ -985,17 +970,17 @@ def encode(data: Any, *, delimiter: str = ',', length_marker: str = '') -> str:
     }
     ```
     with `length_marker='#'` →
-    ```
+    ```text
     items[#2]{sku,qty,price}:
       A1,2,9.99
       B2,1,14.5
     ```
 
-#### Nested Arrays
+#### Length Marker Nested Arrays
 
 - **Rule**: Marker applies to all array levels
 - **Example**: `{'pairs': [['a', 'b'], ['c', 'd']]}` with `length_marker='#'` →
-    ```
+    ```text
     pairs[#2]:
       - [#2]: a,b
       - [#2]: c,d
@@ -1010,38 +995,50 @@ def encode(data: Any, *, delimiter: str = ',', length_marker: str = '') -> str:
 
 ## Non-Serializable Values
 
-### BigInt (Python: Large Integers)
+### Arbitrary-Precision Integers
 
-- **Rule**: Large integers are converted to string representation
-- **Examples** (TypeScript equivalent):
-    - `BigInt(123)` → `'123'`
-    - `{'id': BigInt(456)}` → `'id: 456'`
-
-### Date/Datetime Objects
-
-- **Rule**: Date objects are converted to ISO 8601 string format and quoted
+- **Rule**: Integers exceeding the standard integer range are converted to their string representation
 - **Examples**:
-    - `datetime(2025, 1, 1, 0, 0, 0, tzinfo=timezone.utc)` → `'"2025-01-01T00:00:00.000Z"'`
-    - `{'created': datetime(...)}` → `'created: "2025-01-01T00:00:00.000Z"'`
+    - TypeScript: `BigInt(123)` → `'123'`
+    - Python: `123` → `'123'` (all integers are arbitrary-precision)
+    - TypeScript: `{'id': BigInt(456)}` → `'id: 456'`
 
-### Undefined/Missing Values
+### Date/Time Objects
 
-- **Rule**: Python doesn't have `undefined`, but explicit `None` converts to `null`
+- **Rule**: Date and time objects are converted to ISO 8601 string format and quoted
+- **Format**: `YYYY-MM-DDTHH:MM:SS.sssZ` (UTC recommended)
+- **Rule**: Naive date/time objects (without timezone information) are assumed to be UTC
 - **Examples**:
-    - `None` → `'null'`
-    - `{'value': None}` → `'value: null'`
+    - Python: `datetime(2025, 1, 1, 0, 0, 0, tzinfo=timezone.utc)` → `'"2025-01-01T00:00:00.000Z"'`
+    - Python: `datetime(2025, 1, 1, 0, 0, 0)` → `'"2025-01-01T00:00:00.000Z"'` (naive, assumed UTC)
+    - TypeScript: `new Date('2025-01-01T00:00:00.000Z')` → `'"2025-01-01T00:00:00.000Z"'`
+    - Python: `{'created': datetime(...)}` → `'created: "2025-01-01T00:00:00.000Z"'`
 
-### Functions/Callables
+### Undefined/Null/None Values
 
-- **Rule**: Functions and callable objects are converted to `null`
+- **Rule**: Language-specific null or undefined values are converted to `null`
 - **Examples**:
-    - `lambda: None` → `'null'`
-    - `{'fn': lambda: None}` → `'fn: null'`
+    - Python: `None` → `'null'`
+    - TypeScript: `undefined` → `'null'`
+    - TypeScript: `null` → `'null'`
+    - Python: `{'value': None}` → `'value: null'`
+    - TypeScript: `{'value': undefined}` → `'value: null'`
 
-### Symbols (Python: No Direct Equivalent)
+### Functions and Callable Objects
 
-- **Rule**: If custom symbol-like objects are used, convert to `null`
-- **Note**: Python doesn't have JavaScript Symbol type
+- **Rule**: Functions, lambdas, methods, and other callable objects are converted to `null`
+- **Examples**:
+    - Python: `lambda: None` → `'null'`
+    - TypeScript: `() => {}` → `'null'`
+    - Python: `{'fn': lambda: None}` → `'fn: null'`
+    - TypeScript: `{'fn': function() {}}` → `'fn: null'`
+
+### Symbolic References
+
+- **Rule**: Language-specific symbolic references or unique identifiers are converted to `null`
+- **Examples**:
+    - TypeScript: `Symbol('id')` → `'null'`
+    - TypeScript: `{'key': Symbol('unique')}` → `'key: null'`
 
 ---
 
@@ -1059,143 +1056,13 @@ def encode(data: Any, *, delimiter: str = ',', length_marker: str = '') -> str:
 
 ### Indentation
 
-- **Rule**: Nested structures use 2 spaces per level
-- **Rule**: List items use 2-space indent plus `- ` for first line
-- **Rule**: Subsequent fields in list items align with first field (4 spaces total)
+- **Rule**: Default indentation is 2 spaces per level
+- **Rule**: Any indentation level (2 spaces, 4 spaces, tabs, etc.) may be used, but it must be consistent throughout the entire document
+- **Rule**: List items use one indentation level plus "- " for first line
+- **Rule**: Subsequent fields in list items align with first field (base indent + 2 additional spaces when using 2-space indent, or base indent + indent width for other levels)
 
 ### Line Separation
 
 - **Rule**: Top-level dictionary entries are separated by newlines
 - **Rule**: Array items in list format are separated by newlines
-- **Rule**: Tabular array rows each on separate line with 2-space indent
-
----
-
-## Python-Specific Implementation Notes
-
-### Type Hints
-
-- Use comprehensive type hints for all function parameters and return values
-- Consider using `typing.Protocol` for structural typing where appropriate
-- Use `typing.Literal` for delimiter and length_marker options
-
-### Data Structure Mapping
-
-- JavaScript Object → Python `dict`
-- JavaScript Array → Python `list`
-- JavaScript `null` → Python `None`
-- JavaScript `undefined` → Python `None` (explicit)
-- JavaScript number → Python `int` or `float`
-- JavaScript boolean → Python `bool`
-- JavaScript string → Python `str`
-
-### Special Considerations
-
-- Python's `-0` and `0` are the same, so no special handling needed
-- Use `math.isfinite()` to check for `inf` and `nan`
-- Use `isinstance()` for type checking
-- Use `collections.abc` for abstract type checking
-- Consider using `dataclasses` for internal state management if needed
-
-### Testing Framework
-
-- Use `pytest` for unit testing
-- Maintain 1:1 correspondence with TypeScript test cases
-- Use parametrized tests for delimiter and length_marker options
-
-### String Handling
-
-- Use raw strings (`r""`) for escape sequence literals in tests
-- Use `repr()` or custom quoting logic for string encoding
-- Handle Unicode properly (Python 3 handles this natively)
-
-### Performance Considerations
-
-- Use `io.StringIO` for building output strings efficiently
-- Consider caching key quoting decisions for repeated keys
-- Use generator expressions where appropriate
-
----
-
-## API Design
-
-### Main Function
-
-```python
-def encode(
-    data: Any,
-    *,
-    delimiter: str = ',',
-    length_marker: str = ''
-) -> str:
-    """
-    Encode Python data structures into a compact text format.
-
-    Args:
-        data: The Python object to encode. Can be any JSON-serializable type
-              plus datetime, large integers, and other special types.
-        delimiter: Character(s) to use as array element separator.
-                   Default is ','. Common alternatives: '|', '\t'.
-        length_marker: Optional prefix for array length indicators.
-                      Default is '' (no prefix). Common value: '#'.
-
-    Returns:
-        A string representation of the data in the compact format.
-
-    Raises:
-        TypeError: If data contains unsupported types (after conversion attempts).
-
-    Examples:
-        >>> encode({'name': 'Ada', 'age': 42})
-        'name: Ada\\nage: 42'
-
-        >>> encode([1, 2, 3])
-        '[3]: 1,2,3'
-
-        >>> encode({'items': [{'id': 1}, {'id': 2}]})
-        'items[2]{id}:\\n  1\\n  2'
-
-        >>> encode(['a', 'b', 'c'], delimiter='|')
-        '[3|]: a|b|c'
-
-        >>> encode([1, 2, 3], length_marker='#')
-        '[#3]: 1,2,3'
-    """
-```
-
-### Helper Functions (Internal)
-
-The implementation will likely need several internal helper functions:
-
-- `_normalize_value(value)`: Convert non-serializable values to serializable equivalents
-- `_needs_quoting(s, context)`: Determine if a string needs quotes
-- `_quote_string(s)`: Add quotes and escape characters
-- `_encode_primitive(value, context)`: Encode primitive types
-- `_encode_dict(obj, indent, context)`: Encode dictionary objects
-- `_encode_list(arr, key, indent, context)`: Encode list/arrays
-- `_is_primitive_array(arr)`: Check if array contains only primitives
-- `_can_use_tabular(arr)`: Check if array of objects can use tabular format
-- `_get_object_keys(objects)`: Extract unified key set from objects
-- `_encode_tabular(arr, key, indent, context)`: Encode in tabular format
-- `_encode_list_format(arr, key, indent, context)`: Encode in list format
-
-### Context Object
-
-Consider using a context dataclass to pass encoding parameters:
-
-```python
-@dataclass
-class EncodingContext:
-    delimiter: str
-    length_marker: str
-
-    def array_header(self, length: int) -> str:
-        """Generate array length marker: [#3|] or [3] etc."""
-        ...
-
-    def needs_quoting(self, s: str, location: str) -> bool:
-        """Check if string needs quoting based on context."""
-        ...
-```
-
----
+- **Rule**: Tabular array rows each on separate line with one indentation level
