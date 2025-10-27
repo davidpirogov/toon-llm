@@ -20,6 +20,7 @@ def encode(
     indent: int = 2,
     delimiter: str = ",",
     length_marker: Union[Literal["#"], Literal[False]] = False,
+    quote: str = '"',
 ) -> str:
     r"""
     Encode Python data structures into TOON LLM format.
@@ -80,6 +81,7 @@ def encode(
         indent=indent,
         delimiter=delimiter,
         length_marker=length_marker,
+        quote=quote,
     )
 
     # Resolve options (convert indent to string)
@@ -96,6 +98,7 @@ def decode(
     text: str,
     *,
     delimiter: str = ",",
+    quote: str = '"',
 ) -> JsonValue:
     r"""
     Decode TOON format string to Python data structures.
@@ -146,7 +149,7 @@ def decode(
         [1, 2, 3]
     """
     # Create and validate options
-    options = DecodeOptions(delimiter=delimiter)
+    options = DecodeOptions(delimiter=delimiter,quote=quote,)
 
     # Resolve options
     resolved = ResolvedDecodeOptions.from_options(options)

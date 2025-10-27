@@ -74,7 +74,7 @@ def encode_value(value: JsonValue, options: ResolvedEncodeOptions) -> str:
     if is_json_primitive(value):
         # Type guard ensures value is JsonPrimitive here
         _check_type(value, (str, int, float, bool, type(None)), "JsonPrimitive")
-        return encode_primitive(value, options.delimiter)
+        return encode_primitive(value, options.delimiter, options.quote)
 
     writer = LineWriter(options.indent)
 
@@ -142,7 +142,7 @@ def encode_key_value_pair(
             # Empty object
             writer.push(depth, f"{encoded_key}:")
         else:
-            writer.push(depth, f"{encoded_key}:")
+            writer.push(depth, f"{encoded_key}: {encode_primitive(value, options.delimiter, options.quote)}")
             encode_object(value, writer, depth + 1, options)
 
 
@@ -215,7 +215,7 @@ def encode_inline_primitive_array(
         options: Encoding options
     """
     formatted = format_inline_array(
-        values, options.delimiter, prefix, options.length_marker
+        values, options.delimiter, options.quote, prefix, options.length_marker
     )
     writer.push(depth, formatted)
 
@@ -223,6 +223,7 @@ def encode_inline_primitive_array(
 def format_inline_array(
     values: Sequence[JsonPrimitive],
     delimiter: str,
+    quote: str,
     prefix: Optional[str] = None,
     length_marker: Literal["#", False] = False,
 ) -> str:
@@ -246,7 +247,7 @@ def format_inline_array(
     header = format_header(
         len(values), key=prefix, delimiter=delimiter, length_marker=length_marker
     )
-    joined_value = join_encoded_values(values, delimiter)
+    joined_value = join_encoded_values(values, delimiter, quote)
     # Only add space if there are values
     if len(values) == 0:
         return header
@@ -281,7 +282,7 @@ def encode_array_of_arrays_as_list_items(
     for arr in values:
         if is_array_of_primitives(arr):
             inline = format_inline_array(
-                arr, options.delimiter, None, options.length_marker
+                arr, options.delimiter, options.quote, None, options.length_marker
             )
             writer.push(depth + 1, f"{LIST_ITEM_PREFIX}{inline}")
 
@@ -390,7 +391,7 @@ def write_tabular_rows(
     """
     for row in rows:
         values: list[JsonPrimitive] = [row[key] for key in header]  # type: ignore[misc]
-        joined_value = join_encoded_values(values, options.delimiter)
+        joined_value = join_encoded_values(values, options.delimiter, options.quote)
         writer.push(depth, joined_value)
 
 
@@ -425,14 +426,14 @@ def encode_mixed_array_as_list_items(
             _check_type(item, (str, int, float, bool, type(None)), "JsonPrimitive")
             writer.push(
                 depth + 1,
-                f"{LIST_ITEM_PREFIX}{encode_primitive(item, options.delimiter)}",
+                f"{LIST_ITEM_PREFIX}{encode_primitive(item, options.delimiter, options.quote)}",
             )
         elif is_json_array(item):
             # Direct array as list item
             _check_type(item, list, "JsonArray")
             if is_array_of_primitives(item):
                 inline = format_inline_array(
-                    item, options.delimiter, None, options.length_marker
+                    item, options.delimiter, options.quote, None, options.length_marker
                 )
                 writer.push(depth + 1, f"{LIST_ITEM_PREFIX}{inline}")
         elif is_json_object(item):
@@ -472,13 +473,13 @@ def encode_object_as_list_item(
     if is_json_primitive(first_value):
         writer.push(
             depth,
-            f"{LIST_ITEM_PREFIX}{encoded_key}: {encode_primitive(first_value, options.delimiter)}",
+            f"{LIST_ITEM_PREFIX}{encoded_key}: {encode_primitive(first_value, options.delimiter, options.quote)}",
         )
     elif is_json_array(first_value):
         if is_array_of_primitives(first_value):
             # Inline format for primitive arrays
             formatted = format_inline_array(
-                first_value, options.delimiter, first_key_str, options.length_marker
+                first_value, options.delimiter, options.quote, first_key_str, options.length_marker
             )
             writer.push(depth, f"{LIST_ITEM_PREFIX}{formatted}")
         elif is_array_of_objects(first_value):
@@ -514,12 +515,12 @@ def encode_object_as_list_item(
                     )
                     writer.push(
                         depth + 1,
-                        f"{LIST_ITEM_PREFIX}{encode_primitive(item, options.delimiter)}",
+                        f"{LIST_ITEM_PREFIX}{encode_primitive(item, options.delimiter, options.quote)}",
                     )
                 elif is_json_array(item) and is_array_of_primitives(item):
                     _check_type(item, list, "JsonArray")
                     inline = format_inline_array(
-                        item, options.delimiter, None, options.length_marker
+                        item, options.delimiter, options.quote, None, options.length_marker
                     )
                     writer.push(depth + 1, f"{LIST_ITEM_PREFIX}{inline}")
                 elif is_json_object(item):

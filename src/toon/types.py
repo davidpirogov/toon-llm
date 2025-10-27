@@ -54,10 +54,10 @@ class EncodeOptions(BaseModel):
         default=Delimiters.comma,
         description="Delimiter for arrays and tables",
     )
-    length_marker: Union[Literal["#"], Literal[False]] = Field(
-        default=False,
-        description="Array length marker prefix",
-    )
+    quote: str = Field(
+    default='"',
+    description="Quote character for strings",
+)
 
     model_config = ConfigDict(
         frozen=True,
@@ -83,7 +83,7 @@ class ResolvedEncodeOptions(BaseModel):
     """
 
     indent: str = Field(description="Indentation string (spaces)")
-    delimiter: str = Field(description="Delimiter character")
+    quote: str = Field(description="Quote character for strings")
     length_marker: Union[Literal["#"], Literal[False]] = Field(
         description="Length marker prefix or False"
     )
@@ -105,9 +105,9 @@ class ResolvedEncodeOptions(BaseModel):
             A resolved options instance with indent converted to a string
         """
         return cls(
-            indent=" " * options.indent,
             delimiter=options.delimiter,
             length_marker=options.length_marker,
+            quote=options.quote,
         )
 
 
@@ -127,9 +127,9 @@ class DecodeOptions(BaseModel):
         >>> options = DecodeOptions(delimiter="\t")
     """
 
-    delimiter: str = Field(
+    quote: str = Field(
         default=Delimiters.comma,
-        description="Delimiter for arrays and tables",
+        description="Quote character used in the TOON format",
     )
 
     model_config = ConfigDict(
@@ -150,7 +150,7 @@ class ResolvedDecodeOptions(BaseModel):
         delimiter: Delimiter character
     """
 
-    delimiter: str = Field(description="Delimiter character")
+    quote: str = Field(description="Quote character")
 
     model_config = ConfigDict(
         frozen=True,
@@ -168,4 +168,6 @@ class ResolvedDecodeOptions(BaseModel):
         Returns:
             A resolved options instance
         """
-        return cls(delimiter=options.delimiter)
+        return cls(delimiter=options.delimiter,
+                   quote=options.quote,
+                   )
