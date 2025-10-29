@@ -1,0 +1,31 @@
+name: Tests
+
+on:
+  pull_request:
+    branches: [main, dev]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        # trunk-ignore(yamllint/quoted-strings)
+        python-version: ["3.11", "3.12", "3.13", "3.14", "3.14t"]
+
+    steps:
+      - uses: actions/checkout@v5
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+        with:
+          enable-cache: true
+      - name: Install tox
+        run: uv add tox
+      - name: Run tox
+        run: tox -e py
