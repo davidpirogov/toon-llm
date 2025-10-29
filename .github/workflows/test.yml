@@ -25,7 +25,7 @@ jobs:
         uses: astral-sh/setup-uv@v4
         with:
           enable-cache: true
-      - name: Install tox
-        run: uv tool install tox
+      - name: Install tox and tox-uv
+        run: uv tool install tox --with tox-uv
       - name: Run tox
         run: tox -e py
