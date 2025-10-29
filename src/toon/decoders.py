@@ -175,7 +175,7 @@ class ToonDecoder:
         while i < len(values_text):
             char = values_text[i]
 
-            if char == '"' and (i == 0 or values_text[i - 1] != "\\"):
+            if char == self.options.quote and (i == 0 or values_text[i - 1] != "\\"):
                 in_quotes = not in_quotes
                 current += char
             elif not in_quotes and char == self.options.delimiter:
@@ -228,7 +228,7 @@ class ToonDecoder:
 
         fields_text = header_text[1:-1]
         fields = [
-            f.strip().strip('"') for f in fields_text.split(self.options.delimiter)
+            f.strip().strip(self.options.quote) for f in fields_text.split(self.options.delimiter)
         ]
 
         # Parse data rows
@@ -415,7 +415,7 @@ class ToonDecoder:
 
                         fields_text = remainder[1:brace_end]
                         fields = [
-                            f.strip().strip('"')
+                            f.strip().strip(self.options.quote)
                             for f in fields_text.split(self.options.delimiter)
                         ]  # Parse data rows
                         rows = []
@@ -543,7 +543,7 @@ class ToonDecoder:
 
                 fields_text = remainder[1:brace_end]
                 fields = [
-                    f.strip().strip('"')
+                    f.strip().strip(self.options.quote)
                     for f in fields_text.split(self.options.delimiter)
                 ]
 
@@ -805,11 +805,11 @@ class ToonDecoder:
             return ""
 
         # Handle quoted keys
-        if key.startswith('"') and key.endswith('"'):
+        if key.startswith(self.options.quote) and key.endswith(self.options.quote):
             # Remove quotes and unescape
             inner = key[1:-1]
             # Basic unescaping - handle \\ and \"
-            inner = inner.replace("\\\\", "\\").replace('\\"', '"')
+            inner = inner.replace("\\\\", "\\").replace(f"\\{self.options.quote}", self.options.quote)
             return inner
 
         # Return unquoted key as-is
@@ -821,11 +821,11 @@ class ToonDecoder:
             return ""
 
         # Handle quoted strings
-        if value.startswith('"') and value.endswith('"'):
+        if value.startswith(self.options.quote) and value.endswith(self.options.quote):
             # Remove quotes and unescape
             inner = value[1:-1]
             # Basic unescaping - handle \\ and \"
-            inner = inner.replace("\\\\", "\\").replace('\\"', '"')
+            inner = inner.replace("\\\\", "\\").replace(f"\\{self.options.quote}", self.options.quote)
             return inner
 
         # Handle literals

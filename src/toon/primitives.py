@@ -23,7 +23,7 @@ from toon.constants import (
 from toon.types import JsonPrimitive
 
 
-def encode_primitive(value: JsonPrimitive, delimiter: str = COMMA) -> str:
+def encode_primitive(value: JsonPrimitive, delimiter: str = COMMA, quote: str = DOUBLE_QUOTE) -> str:
     """
     Encode a JSON primitive value to a string.
 
@@ -70,10 +70,10 @@ def encode_primitive(value: JsonPrimitive, delimiter: str = COMMA) -> str:
         return str(value)
 
     # String
-    return encode_string_literal(value, delimiter)
+    return encode_string_literal(value, delimiter, quote)
 
 
-def encode_string_literal(value: str, delimiter: str = COMMA) -> str:
+def encode_string_literal(value: str, delimiter: str = COMMA, quote: str = DOUBLE_QUOTE) -> str:
     r"""
     Encode a string value, adding quotes and escaping if necessary.
 
@@ -95,13 +95,13 @@ def encode_string_literal(value: str, delimiter: str = COMMA) -> str:
         >>> encode_string_literal("line1\nline2", ",")
         '"line1\\nline2"'
     """
-    if is_safe_unquoted(value, delimiter):
+    if is_safe_unquoted(value, delimiter, quote):
         return value
 
-    return f"{DOUBLE_QUOTE}{escape_string(value, delimiter)}{DOUBLE_QUOTE}"
+    return f"{quote}{escape_string(value, delimiter, quote)}{quote}"
 
 
-def escape_string(value: str, delimiter: str = COMMA) -> str:
+def escape_string(value: str, delimiter: str = COMMA, quote: str = DOUBLE_QUOTE) -> str:
     r"""
     Escape special characters in a string for quoted output.
 
@@ -128,7 +128,7 @@ def escape_string(value: str, delimiter: str = COMMA) -> str:
     """
     result = (
         value.replace(BACKSLASH, f"{BACKSLASH}{BACKSLASH}")
-        .replace(DOUBLE_QUOTE, f"{BACKSLASH}{DOUBLE_QUOTE}")
+        .replace(quote, f"{BACKSLASH}{quote}")
         .replace("\n", f"{BACKSLASH}n")
         .replace("\r", f"{BACKSLASH}r")
     )
@@ -138,7 +138,7 @@ def escape_string(value: str, delimiter: str = COMMA) -> str:
     return result
 
 
-def is_safe_unquoted(value: str, delimiter: str = COMMA) -> bool:
+def is_safe_unquoted(value: str, delimiter: str = COMMA, quote: str = DOUBLE_QUOTE) -> bool:
     """
     Check if a string is safe to leave unquoted.
 
@@ -191,7 +191,7 @@ def is_safe_unquoted(value: str, delimiter: str = COMMA) -> bool:
         return False
 
     # Quotes and backslash (always need escaping)
-    if '"' in value or BACKSLASH in value:
+    if quote in value or BACKSLASH in value:
         return False
 
     # Brackets and braces (always structural)
@@ -234,7 +234,7 @@ def _is_numeric_like(value: str) -> bool:
     return False
 
 
-def encode_key(key: str) -> str:
+def encode_key(key: str, quote: str = DOUBLE_QUOTE) -> str:
     """
     Encode an object key, quoting if necessary.
 
@@ -262,7 +262,7 @@ def encode_key(key: str) -> str:
     if _is_valid_unquoted_key(key):
         return key
 
-    return f"{DOUBLE_QUOTE}{escape_string(key)}{DOUBLE_QUOTE}"
+    return f"{quote}{escape_string(key, COMMA, quote)}{quote}"
 
 
 def _is_valid_unquoted_key(key: str) -> bool:
@@ -285,7 +285,7 @@ def _is_valid_unquoted_key(key: str) -> bool:
     return bool(re.match(r"^[A-Z_][\w.]*$", key, re.IGNORECASE))
 
 
-def join_encoded_values(values: Sequence[JsonPrimitive], delimiter: str = COMMA) -> str:
+def join_encoded_values(values: Sequence[JsonPrimitive], delimiter: str = COMMA, quote: str = DOUBLE_QUOTE) -> str:
     """
     Encode and join multiple primitive values with a delimiter.
 
@@ -304,7 +304,7 @@ def join_encoded_values(values: Sequence[JsonPrimitive], delimiter: str = COMMA)
         >>> join_encoded_values([True, False, None], ",")
         'true,false,null'
     """
-    return delimiter.join(encode_primitive(v, delimiter) for v in values)
+    return delimiter.join(encode_primitive(v, delimiter, quote) for v in values)
 
 
 def format_header(
@@ -313,6 +313,7 @@ def format_header(
     key: Optional[str] = None,
     fields: Optional[Sequence[str]] = None,
     delimiter: str = COMMA,
+    quote: str = DOUBLE_QUOTE,
     length_marker: Union[Literal["#"], Literal[False]] = False,
 ) -> str:
     """
@@ -351,7 +352,7 @@ def format_header(
 
     # Add key prefix if provided
     if key:
-        header += encode_key(key)
+        header += encode_key(key, quote)
 
     # Add length with optional marker and delimiter indicator
     header += "["
@@ -364,7 +365,7 @@ def format_header(
 
     # Add field names if provided
     if fields:
-        encoded_fields = [encode_key(f) for f in fields]
+        encoded_fields = [encode_key(f, quote) for f in fields]
         header += f"{{{delimiter.join(encoded_fields)}}}"
 
     # Add trailing colon

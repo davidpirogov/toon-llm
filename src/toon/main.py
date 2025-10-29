@@ -75,9 +75,9 @@ def encode_cmd(
             "--indent", "-i", help="Number of spaces per indentation level", min=1
         ),
     ] = 2,
-    delimiter: Annotated[
+    quote: Annotated[
         str,
-        typer.Option("--delimiter", "-d", help="Delimiter for arrays and tables"),
+        typer.Option("--quote", "-d", help="Quote character for strings"),
     ] = ",",
     length_marker: Annotated[
         bool,
@@ -99,6 +99,12 @@ def encode_cmd(
         toon encode input.json --indent 4 --delimiter "|"
     """
     try:
+        if delimiter == quote:
+            typer.echo(
+               f"Error: The 'delimiter' ({delimiter}) and 'quote' ({quote}) parameters cannot be the same.",
+               err=True,
+            )
+            raise typer.Exit(code=1)
         # Read input
         if input_file is None or str(input_file) == "-":
             # Read from stdin
@@ -126,6 +132,7 @@ def encode_cmd(
                 data,
                 indent=indent,
                 delimiter=delimiter,
+                quote=quote,
                 length_marker=length_marker_value,
             )
         except (EncodeError, ValueError) as e:
@@ -168,9 +175,9 @@ def decode_cmd(
             "--output", "-o", help="Output file. If not specified, writes to stdout."
         ),
     ] = None,
-    delimiter: Annotated[
+    quote: Annotated[
         str,
-        typer.Option("--delimiter", "-d", help="Delimiter used in the TOON LLM format"),
+        typer.Option("--quote", "-d", help="Quote character used in the TOON format"),
     ] = ",",
     pretty: Annotated[
         bool,
@@ -201,6 +208,12 @@ def decode_cmd(
         toon decode input.toon --validate
     """
     try:
+        if delimiter == quote:
+             typer.echo(
+                 f"Error: The 'delimiter' ({delimiter}) and 'quote' ({quote}) parameters cannot be the same.",
+                  err=True,
+              )
+        raise typer.Exit(code=1)
         # Read input
         if input_file is None or str(input_file) == "-":
             # Read from stdin
@@ -214,7 +227,7 @@ def decode_cmd(
 
         # Decode from TOON LLM
         try:
-            result = decode(input_text, delimiter=delimiter)
+            result = decode(input_text, delimiter=delimiter, quote=quote)
         except DecodeError as e:
             typer.echo(f"Error: Decoding failed: {e}", err=True)
             if verbose:
