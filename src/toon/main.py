@@ -75,10 +75,14 @@ def encode_cmd(
             "--indent", "-i", help="Number of spaces per indentation level", min=1
         ),
     ] = 2,
+    delimiter: Annotated[
+        str,
+        typer.Option("--delimiter", "-s", help="Delimiter character for fields"),
+    ] = ",",
     quote: Annotated[
         str,
         typer.Option("--quote", "-d", help="Quote character for strings"),
-    ] = ",",
+    ] = "\"",
     length_marker: Annotated[
         bool,
         typer.Option("--length-marker", "-l", help='Use "#" prefix for array lengths'),
@@ -175,10 +179,14 @@ def decode_cmd(
             "--output", "-o", help="Output file. If not specified, writes to stdout."
         ),
     ] = None,
+    delimiter: Annotated[
+        str,
+        typer.Option("--delimiter", "-s", help="Delimiter character for fields"),
+    ] = ",",
     quote: Annotated[
         str,
         typer.Option("--quote", "-d", help="Quote character used in the TOON format"),
-    ] = ",",
+    ] = "\"",
     pretty: Annotated[
         bool,
         typer.Option(
@@ -209,11 +217,12 @@ def decode_cmd(
     """
     try:
         if delimiter == quote:
-             typer.echo(
+            typer.echo(
                  f"Error: The 'delimiter' ({delimiter}) and 'quote' ({quote}) parameters cannot be the same.",
                   err=True,
               )
-        raise typer.Exit(code=1)
+            raise typer.Exit(code=1)
+
         # Read input
         if input_file is None or str(input_file) == "-":
             # Read from stdin

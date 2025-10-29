@@ -130,7 +130,7 @@ def encode_key_value_pair(
     if is_json_primitive(value):
         _check_type(value, (str, int, float, bool, type(None)), "JsonPrimitive")
         writer.push(
-            depth, f"{encoded_key}: {encode_primitive(value, options.delimiter)}"
+            depth, f"{encoded_key}: {encode_primitive(value, options.delimiter, options.quote)}"
         )
     elif is_json_array(value):
         _check_type(value, list, "JsonArray")
@@ -142,7 +142,7 @@ def encode_key_value_pair(
             # Empty object
             writer.push(depth, f"{encoded_key}:")
         else:
-            writer.push(depth, f"{encoded_key}: {encode_primitive(value, options.delimiter, options.quote)}")
+            writer.push(depth, f"{encoded_key}:")
             encode_object(value, writer, depth + 1, options)
 
 
