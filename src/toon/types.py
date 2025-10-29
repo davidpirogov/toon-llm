@@ -37,6 +37,7 @@ class EncodeOptions(BaseModel):
     Attributes:
         indent: Number of spaces per indentation level (default: 2, minimum: 1)
         delimiter: Delimiter character for arrays and tables (default: comma)
+        quote: Quote character for strings (default: double quote)
         length_marker: Optional "#" prefix for array lengths, or False to disable (default: False)
 
     Examples:
@@ -55,9 +56,13 @@ class EncodeOptions(BaseModel):
         description="Delimiter for arrays and tables",
     )
     quote: str = Field(
-    default='"',
-    description="Quote character for strings",
-)
+        default='"',
+        description="Quote character for strings",
+    )
+    length_marker: Union[Literal["#"], Literal[False]] = Field(
+        default=False,
+        description="Length marker prefix or False",
+    )
 
     model_config = ConfigDict(
         frozen=True,
@@ -79,10 +84,12 @@ class ResolvedEncodeOptions(BaseModel):
     Attributes:
         indent: Indentation string (spaces repeated)
         delimiter: Delimiter character
+        quote: Quote character for strings
         length_marker: Length marker character or False
     """
 
     indent: str = Field(description="Indentation string (spaces)")
+    delimiter: str = Field(description="Delimiter character")
     quote: str = Field(description="Quote character for strings")
     length_marker: Union[Literal["#"], Literal[False]] = Field(
         description="Length marker prefix or False"
@@ -105,6 +112,7 @@ class ResolvedEncodeOptions(BaseModel):
             A resolved options instance with indent converted to a string
         """
         return cls(
+            indent=" " * options.indent,
             delimiter=options.delimiter,
             length_marker=options.length_marker,
             quote=options.quote,
@@ -120,6 +128,7 @@ class DecodeOptions(BaseModel):
 
     Attributes:
         delimiter: Delimiter character used in the TOON format (default: comma)
+        quote: Quote character used in the TOON format (default: double quote)
 
     Examples:
         >>> options = DecodeOptions()  # Use default
@@ -127,8 +136,12 @@ class DecodeOptions(BaseModel):
         >>> options = DecodeOptions(delimiter="\t")
     """
 
-    quote: str = Field(
+    delimiter: str = Field(
         default=Delimiters.comma,
+        description="Delimiter character used in the TOON format",
+    )
+    quote: str = Field(
+        default='"',
         description="Quote character used in the TOON format",
     )
 
@@ -148,8 +161,10 @@ class ResolvedDecodeOptions(BaseModel):
 
     Attributes:
         delimiter: Delimiter character
+        quote: Quote character
     """
 
+    delimiter: str = Field(description="Delimiter character")
     quote: str = Field(description="Quote character")
 
     model_config = ConfigDict(
@@ -168,6 +183,7 @@ class ResolvedDecodeOptions(BaseModel):
         Returns:
             A resolved options instance
         """
-        return cls(delimiter=options.delimiter,
-                   quote=options.quote,
-                   )
+        return cls(
+            delimiter=options.delimiter,
+            quote=options.quote,
+        )

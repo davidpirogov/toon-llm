@@ -56,13 +56,14 @@ class TestDecodeOptions:
         """Test that model can be serialized to dict."""
         options = DecodeOptions(delimiter="|")
         data = options.model_dump()
-        assert data == {"delimiter": "|"}
+        assert data == {"delimiter": "|", "quote": '"'}
 
     def test_model_deserialization(self):
         """Test that model can be created from dict."""
-        data = {"delimiter": "|"}
+        data = {"delimiter": "|", "quote": '"'}
         options = DecodeOptions(**data)
         assert options.delimiter == "|"
+        assert options.quote == '"'
 
 
 class TestResolvedDecodeOptions:
@@ -73,46 +74,51 @@ class TestResolvedDecodeOptions:
         options = DecodeOptions()
         resolved = ResolvedDecodeOptions.from_options(options)
         assert resolved.delimiter == ","
+        assert resolved.quote == '"'
 
     def test_create_from_options_custom_delimiter(self):
         """Test from_options with custom delimiter."""
         options = DecodeOptions(delimiter="|")
         resolved = ResolvedDecodeOptions.from_options(options)
         assert resolved.delimiter == "|"
+        assert resolved.quote == '"'
 
     def test_create_from_options_tab_delimiter(self):
         """Test from_options with tab delimiter."""
         options = DecodeOptions(delimiter="\t")
         resolved = ResolvedDecodeOptions.from_options(options)
         assert resolved.delimiter == "\t"
+        assert resolved.quote == '"'
 
     def test_model_is_frozen(self):
         """Test that ResolvedDecodeOptions is immutable after creation."""
-        resolved = ResolvedDecodeOptions(delimiter=",")
+        resolved = ResolvedDecodeOptions(delimiter=",", quote='"')
         with pytest.raises(ValidationError):
             resolved.delimiter = "|"  # type: ignore[misc]
 
     def test_extra_fields_forbidden(self):
         """Test that extra fields are rejected."""
         with pytest.raises(ValidationError):
-            ResolvedDecodeOptions(delimiter=",", unknown_field="value")  # type: ignore[call-arg]
+            ResolvedDecodeOptions(delimiter=",", quote='"', unknown_field="value")  # type: ignore[call-arg]
 
     def test_direct_instantiation(self):
         """Test that ResolvedDecodeOptions can be created directly."""
-        resolved = ResolvedDecodeOptions(delimiter="|")
+        resolved = ResolvedDecodeOptions(delimiter="|", quote='"')
         assert resolved.delimiter == "|"
+        assert resolved.quote == '"'
 
     def test_model_serialization(self):
         """Test that model can be serialized to dict."""
-        resolved = ResolvedDecodeOptions(delimiter="|")
+        resolved = ResolvedDecodeOptions(delimiter="|", quote='"')
         data = resolved.model_dump()
-        assert data == {"delimiter": "|"}
+        assert data == {"delimiter": "|", "quote": '"'}
 
     def test_model_deserialization(self):
         """Test that model can be created from dict."""
-        data = {"delimiter": "|"}
+        data = {"delimiter": "|", "quote": '"'}
         resolved = ResolvedDecodeOptions(**data)
         assert resolved.delimiter == "|"
+        assert resolved.quote == '"'
 
 
 class TestDecodeOptionsIntegration:
@@ -123,8 +129,9 @@ class TestDecodeOptionsIntegration:
         original = DecodeOptions(delimiter="|")
         resolved = ResolvedDecodeOptions.from_options(original)
         # Create new DecodeOptions with same values
-        reconstructed = DecodeOptions(delimiter=resolved.delimiter)
+        reconstructed = DecodeOptions(delimiter=resolved.delimiter, quote=resolved.quote)
         assert original.delimiter == reconstructed.delimiter
+        assert original.quote == reconstructed.quote
 
     def test_multiple_conversions_idempotent(self):
         """Test that multiple conversions produce same result."""
@@ -132,6 +139,7 @@ class TestDecodeOptionsIntegration:
         resolved1 = ResolvedDecodeOptions.from_options(options)
         resolved2 = ResolvedDecodeOptions.from_options(options)
         assert resolved1.delimiter == resolved2.delimiter
+        assert resolved1.quote == resolved2.quote
 
     def test_all_delimiters_preserve_values(self):
         """Test that all delimiter types preserve values correctly."""
@@ -140,3 +148,4 @@ class TestDecodeOptionsIntegration:
             options = DecodeOptions(delimiter=delimiter)
             resolved = ResolvedDecodeOptions.from_options(options)
             assert resolved.delimiter == delimiter
+            assert resolved.quote == '"'
