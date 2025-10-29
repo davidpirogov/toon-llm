@@ -57,16 +57,9 @@ def encode_primitive(value: JsonPrimitive, delimiter: str = COMMA, quote: str = 
         # Normalize floats that are whole numbers to integers for cleaner output
         if isinstance(value, float) and value.is_integer():
             return str(int(value))
-        # For floats, avoid scientific notation for reasonable-sized numbers
+        # For all other floats, use repr() to match json.dumps() behavior
         if isinstance(value, float):
-            # Check if the number is in a reasonable range to expand
-            abs_val = abs(value)
-            if abs_val == 0 or (1e-6 <= abs_val <= 1e15):
-                # Format without scientific notation, removing trailing zeros
-                formatted = f"{value:.15f}".rstrip("0").rstrip(".")
-                return formatted
-            # For very large or very small numbers, use default string representation
-            return str(value)
+            return repr(value)
         return str(value)
 
     # String

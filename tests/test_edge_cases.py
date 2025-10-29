@@ -32,10 +32,13 @@ class TestPrimitiveEdgeCases:
         assert encode(-0) == "0"  # Negative zero should become positive
 
     def test_scientific_notation(self) -> None:
-        """Test encoding of scientific notation numbers."""
-        assert encode(1e6) == "1000000"
-        assert encode(1e-6) == "0.000001"
-        assert encode(1.5e10) == "15000000000"
+        """Test encoding of scientific notation numbers matches JSON behavior."""
+        # Whole number floats become integers (design choice for compactness)
+        assert encode(1e6) == "1000000"  # 1000000.0 -> integer
+        # Very small numbers use scientific notation like JSON
+        assert encode(1e-6) == "1e-06"  # Matches json.dumps()
+        # Large whole number floats become integers
+        assert encode(1.5e10) == "15000000000"  # 15000000000.0 -> integer
 
     def test_non_finite_numbers(self) -> None:
         """Test encoding of non-finite numbers."""
