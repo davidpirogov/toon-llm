@@ -159,7 +159,13 @@ encode("true")                  # → '"true"'         (ambiguous)
 encode(0)                       # → '0'
 encode(-42)                     # → '-42'
 encode(3.14159)                 # → '3.14159'
-encode(1e6)                     # → '1000000.0'
+encode(2.0)                     # → '2'              (whole number -> int)
+encode(1e6)                     # → '1000000'        (whole number -> int)
+encode(1e-10)                   # → '1e-10'          (scientific notation)
+
+# Float encoding matches json.dumps() behavior
+# Whole number floats become integers for compactness
+# Other floats use Python's repr() which matches JSON defaults
 
 # Booleans and null
 encode(True)                    # → 'true'

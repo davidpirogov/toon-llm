@@ -12,10 +12,13 @@ Tests follow the coding standards defined in docs/CODING_STANDARDS.md:
 - Organized test classes by functionality
 """
 
+import json
+
 import pytest
 
 from toon import encode
 from tests.sample_data import get_sample
+
 
 
 class TestPrimitives:
@@ -56,6 +59,101 @@ class TestPrimitives:
         expected = get_sample("valid-simple-float")
         assert encode(3.14) == expected
         assert encode(3.14) == "3.14"
+
+
+class TestFloatJsonCompatibility:
+    """Test that float encoding matches json.dumps() behavior.
+
+    This addresses issue #6: Ensure encoder uses JSON defaults for serializing numbers.
+    Reference: https://github.com/davidpirogov/toon-llm/issues/6
+    """
+
+    def test_float_from_issue_4(self) -> None:
+        """Test the specific float from issue #4 (677.822)."""
+        test_value = 677.822
+        json_output = json.dumps(test_value)
+        toon_output = encode(test_value)
+
+        # Should match JSON output exactly
+        assert toon_output == json_output
+        assert toon_output == "677.822"
+
+    def test_float_precision_cases(self) -> None:
+        """Test various floats that previously showed excessive precision."""
+        test_cases = [
+            677.822,
+            123.456789,
+            0.1,
+            0.12345,
+            3.14,
+            1.5,
+        ]
+
+        for test_value in test_cases:
+            json_output = json.dumps(test_value)
+            toon_output = encode(test_value)
+            assert toon_output == json_output, (
+                f"Float {test_value} encoding mismatch: "
+                f"JSON={json_output!r}, TOON={toon_output!r}"
+            )
+
+    def test_float_whole_numbers_as_integers(self) -> None:
+        """Test that whole number floats are encoded as integers (design choice)."""
+        # This is intentional for compactness, even though JSON would keep .0
+        assert encode(2.0) == "2"
+        assert encode(10.0) == "10"
+        assert encode(100.0) == "100"
+        assert encode(-5.0) == "-5"
+
+    def test_float_scientific_notation(self) -> None:
+        """Test that very small/large floats use scientific notation like JSON."""
+        # Test values that use scientific notation (non-whole numbers)
+        test_cases = [
+            1e-10,
+            1e-15,
+        ]
+
+        for test_value in test_cases:
+            json_output = json.dumps(test_value)
+            toon_output = encode(test_value)
+            assert toon_output == json_output, (
+                f"Scientific notation mismatch for {test_value}: "
+                f"JSON={json_output!r}, TOON={toon_output!r}"
+            )
+
+        # Large whole number floats become integers (design choice for compactness)
+        # e.g., 1e10 = 10000000000.0 -> "10000000000" (not "10000000000.0")
+        assert encode(1e10) == "10000000000"  # 1e10 is a whole number
+        assert encode(1e15) == "1000000000000000"  # 1e15 is a whole number
+
+    def test_float_special_values(self) -> None:
+        """Test that special float values (inf, -inf, nan) encode as null."""
+        # These are not valid JSON, so we encode as null
+        assert encode(float('inf')) == "null"
+        assert encode(float('-inf')) == "null"
+        assert encode(float('nan')) == "null"
+
+
+    def test_float_edge_case_arithmetic(self) -> None:
+        """Test classic floating point arithmetic edge cases."""
+        # Classic case: 0.1 + 0.2
+        result = 0.1 + 0.2
+        json_output = json.dumps(result)
+        toon_output = encode(result)
+        assert toon_output == json_output
+
+    def test_object_with_floats(self) -> None:
+        """Test encoding objects containing floats matches JSON for the float values."""
+        sample = {"ma": {"5": 677.822}}
+
+        # The full object won't match due to TOON's format, but the float should match
+        toon_output = encode(sample)
+
+        # Verify the float is encoded correctly within the object
+        assert "677.822" in toon_output
+        # Should NOT have excessive precision
+        assert "677.822000000000003" not in toon_output
+
 
 
 class TestStrings:
