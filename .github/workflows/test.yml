@@ -26,6 +26,6 @@ jobs:
         with:
           enable-cache: true
       - name: Install tox
-        run: uv add tox
+        run: uv tool install tox
       - name: Run tox
         run: tox -e py
