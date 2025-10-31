@@ -823,11 +823,11 @@ print(encode(data, indent=4))
 #     nested:
 #         data[3]: 1,2,3
 
-# Minimal indent (0 spaces - flat)
-print(encode(data, indent=0))
+# Minimal indent (1 space - minimal size)
+print(encode(data, indent=1))
 # deeply:
-# nested:
-# data[3]: 1,2,3
+#  nested:
+#   data[3]: 1,2,3
 ```
 
 ---
